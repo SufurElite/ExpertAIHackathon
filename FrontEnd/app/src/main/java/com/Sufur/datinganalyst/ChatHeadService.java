@@ -1,7 +1,10 @@
 package com.Sufur.datinganalyst;
 
-import android.app.Service;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
+import android.view.View;
+import android.app.Service;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
 import android.util.Log;
@@ -47,6 +50,12 @@ public class ChatHeadService extends Service {
         //Add the view to the window
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         windowManager.addView(view, params);
+        /*
+        if (isFloatingServiceRunning()) {
+            // onDestroy() method in FloatingWindowGFG
+            // class will be called here
+            stopService(new Intent(ChatHeadService.this, FloatingWindow.class));
+        }*/
 
         //Set the close button.
         ImageView closeButton = (ImageView) view.findViewById(R.id.close_btn);
@@ -62,9 +71,10 @@ public class ChatHeadService extends Service {
         centerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ChatHeadService.this, ChatActivity.class);
+                stopSelf();
+                Intent intent = new Intent(ChatHeadService.this, FloatingWindow.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                startService(intent);
             }
         });
 
@@ -122,6 +132,31 @@ public class ChatHeadService extends Service {
                 return false;
             }
         });
+    }
+
+    private boolean isFloatingServiceRunning() {
+        // The ACTIVITY_SERVICE is needed to retrieve a
+        // ActivityManager for interacting with the global system
+        // It has a constant String value "activity".
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+
+        // A loop is needed to get Service information that
+        // are currently running in the System.
+        // So ActivityManager.RunningServiceInfo is used.
+        // It helps to retrieve a
+        // particular service information, here its this service.
+        // getRunningServices() method returns a list of the
+        // services that are currently running
+        // and MAX_VALUE is 2147483647. So at most this many services
+        // can be returned by this method.
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            // If this service is found as a running,
+            // it will return true or else false.
+            if (FloatingWindow.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
