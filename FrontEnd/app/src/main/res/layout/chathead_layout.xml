@@ -8,15 +8,16 @@
     android:orientation="vertical">
 
     <!--Profile image for the chat head.-->
+
+    <!--Close button-->
     <ImageView
         android:id="@+id/chat_head_profile_iv"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginTop="8dp"
         android:src="@drawable/chathead_logo"
-        tools:ignore="ContentDescription"/>
+        tools:ignore="ContentDescription" />
 
-    <!--Close button-->
     <ImageView
         android:id="@+id/close_btn"
         android:layout_width="26dp"
@@ -24,4 +25,13 @@
         android:layout_marginLeft="40dp"
         android:src="@drawable/ic_close"
         tools:ignore="ContentDescription"/>
+
+    <!--centre button-->
+    <ImageView
+        android:id="@+id/center_btn"
+        android:layout_width="32dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="22dp"
+        tools:ignore="ContentDescription" />
 </RelativeLayout>
