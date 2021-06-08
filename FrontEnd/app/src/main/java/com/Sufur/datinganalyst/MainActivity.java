@@ -11,14 +11,23 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
+    private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        mAuth = FirebaseAuth.getInstance();
+        Common.currentUser = mAuth.getCurrentUser();
+        if(Common.currentUser != null){
+            startActivity(new Intent(MainActivity.this, ChatActivity.class));
+            finish();
+        }
+        setContentView(R.layout.startup_page);
         //Check if the application has draw over other apps permission or not?
         //This permission is by default available for API<23. But for API > 23
         //you have to ask for the permission in runtime.
@@ -38,13 +47,17 @@ public class MainActivity extends AppCompatActivity {
      * Set and initialize the view elements.
      */
     private void initializeView() {
-        findViewById(R.id.notify_me).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.signUpButton).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View mview) {
-                //Log.d("DebugChecking","Got here pogo");
-                startService(new Intent(MainActivity.this, ChatHeadService.class));
-                //Log.d("DebugChecking","But not here Sadge");
-                finish();
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, SignUp.class));
+            }
+        });
+
+        findViewById(R.id.loginButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, Login.class));
             }
         });
     }

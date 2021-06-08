@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Chadvice</string>
+    <string name="signup">Sign-Up</string>
+    <string name="login">Login</string>
+    <string name="logoContentDesc">Logo on starting-page</string>
+    <string name="logout">Logout</string>
+    <string name="launch_btn">Launch AI</string>
 </resources>

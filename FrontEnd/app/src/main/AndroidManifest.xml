@@ -2,10 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.Sufur.datinganalyst">
 
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -16,22 +12,27 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ChatActivity"
-            android:label="Chat with Android">
 
+        <activity android:name=".Login">
         </activity>
-        <service android:name=".FloatingWindow"
-            android:label="Floating Window On Top"/>
-
+        <activity android:name=".SignUp">
+        </activity>
+        <activity android:name=".ChatActivity">
+        </activity>
+        <service
+            android:name=".FloatingWindow"
+            android:label="Floating Window On Top" />
         <service
             android:name=".ChatHeadService"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
     </application>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <uses-permission android:name="android.permission.VIBRATE" />
 
 </manifest>

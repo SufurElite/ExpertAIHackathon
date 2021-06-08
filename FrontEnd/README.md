@@ -7,4 +7,9 @@ Here are links I found useful to code &amp; tutorials for the FrontEnd.
 ### FloatingWindow
 1. https://www.geeksforgeeks.org/how-to-make-a-floating-window-application-in-android/#:~:text=Go%20to%20res%20%2D%3E%20layout.,layout%20of%20the%20floating%20window.
 2. https://stackoverflow.com/questions/52980478/how-to-create-a-floating-window-like-clipboard-pro-app
+### Firebase Sign-in
+1. https://firebase.google.com/docs/auth/android/password-auth
+2. https://github.com/firebase/quickstart-android/blob/master/auth/README.md
+3. https://firebase.google.com/docs/android/setup
+
 
