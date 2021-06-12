@@ -11,5 +11,13 @@ Here are links I found useful to code &amp; tutorials for the FrontEnd.
 1. https://firebase.google.com/docs/auth/android/password-auth
 2. https://github.com/firebase/quickstart-android/blob/master/auth/README.md
 3. https://firebase.google.com/docs/android/setup
+### Screenshot Functionality
+1. https://github.com/googlearchive/android-ScreenCapture
+2. https://github.com/mtsahakis/MediaProjectionDemo
+3. https://stackoverflow.com/questions/42379301/how-to-use-postdelayed-correctly-in-android-studio
+4. https://medium.com/bolt-labs/how-to-programmatically-capture-screen-on-android-a-comprehensive-guide-f500c95e455a
+5. https://stackoverflow.com/questions/30909926/get-text-content-of-the-android-screen
+6. https://github.com/bolteu/screenshotty
+7. https://stackoverflow.com/questions/32513379/how-to-record-screen-and-take-screenshots-using-android-api 
 
 
