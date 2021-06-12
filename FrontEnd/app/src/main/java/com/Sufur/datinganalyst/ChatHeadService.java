@@ -1,8 +1,12 @@
 package com.Sufur.datinganalyst;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.media.projection.MediaProjectionManager;
 import android.view.View;
 import android.app.Service;
 import android.graphics.PixelFormat;
@@ -12,13 +16,24 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.media.projection.MediaProjectionManager;
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 public class ChatHeadService extends Service {
 
     private WindowManager windowManager;
     private View view;
+
+    private static final int REQUEST_CODE = 100;
 
     public ChatHeadService() {
     }
@@ -66,15 +81,23 @@ public class ChatHeadService extends Service {
                 stopSelf();
             }
         });
-        //Set the close button.
+
         ImageView centerButton = (ImageView) view.findViewById(R.id.center_btn);
+        // When tapped in the centre, open the floating window
         centerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Get Bitmap of the Current View
                 stopSelf();
-                Intent intent = new Intent(ChatHeadService.this, FloatingWindow.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startService(intent);
+                /*view.setDrawingCacheEnabled(true);
+                Common.bitmap = Bitmap.createBitmap(view.getDisplay().getDrawingCache());
+                view.setDrawingCacheEnabled(false);*/
+                //Common.bitmap = Bitmap.createBitmap(view.getWidth() , view.getHeight(), Bitmap.Config.ARGB_8888);
+                //Canvas c = new Canvas(Common.bitmap);
+                //view.draw(c);
+                Intent floatingWindow = new Intent(ChatHeadService.this, FloatingWindow.class);
+                floatingWindow.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startService(floatingWindow);
             }
         });
 
@@ -134,6 +157,14 @@ public class ChatHeadService extends Service {
         });
     }
 
+    protected void onStartCommand(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                startService(com.Sufur.datinganalyst.ScreenCaptureService.getStartIntent(this, resultCode, data));
+            }
+        }
+    }
+
     private boolean isFloatingServiceRunning() {
         // The ACTIVITY_SERVICE is needed to retrieve a
         // ActivityManager for interacting with the global system
@@ -158,6 +189,7 @@ public class ChatHeadService extends Service {
         }
         return false;
     }
+
 
     @Override
     public void onDestroy() {

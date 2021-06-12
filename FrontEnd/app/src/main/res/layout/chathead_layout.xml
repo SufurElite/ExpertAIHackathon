@@ -2,14 +2,11 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="65dp"
+    android:layout_width="match_parent"
     android:id="@+id/chat_head_root"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!--Profile image for the chat head.-->
-
-    <!--Close button-->
     <ImageView
         android:id="@+id/chat_head_profile_iv"
         android:layout_width="60dp"
@@ -18,11 +15,12 @@
         android:src="@drawable/chathead_logo"
         tools:ignore="ContentDescription" />
 
+    <!--Close button-->
     <ImageView
         android:id="@+id/close_btn"
         android:layout_width="26dp"
         android:layout_height="26dp"
-        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp"
         android:src="@drawable/ic_close"
         tools:ignore="ContentDescription"/>
 
@@ -31,7 +29,7 @@
         android:id="@+id/center_btn"
         android:layout_width="32dp"
         android:layout_height="30dp"
-        android:layout_marginLeft="14dp"
+        android:layout_marginStart="14dp"
         android:layout_marginTop="22dp"
         tools:ignore="ContentDescription" />
 </RelativeLayout>

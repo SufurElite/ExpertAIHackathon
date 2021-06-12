@@ -22,6 +22,7 @@
         </activity>
         <activity android:name=".ChatActivity">
         </activity>
+
         <service
             android:name=".FloatingWindow"
             android:label="Floating Window On Top" />
@@ -29,8 +30,13 @@
             android:name=".ChatHeadService"
             android:enabled="true"
             android:exported="false" />
+        <service
+            android:name=".ScreenCaptureService"
+            android:foregroundServiceType="mediaProjection" />
+
     </application>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <uses-permission android:name="android.permission.VIBRATE" />

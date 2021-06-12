@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -21,12 +22,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mAuth = FirebaseAuth.getInstance();
         Common.currentUser = mAuth.getCurrentUser();
         if(Common.currentUser != null){
             startActivity(new Intent(MainActivity.this, ChatActivity.class));
             finish();
         }
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        Common.displayWidth = displayMetrics.widthPixels;
+        Common.displayHeight = displayMetrics.heightPixels;
+
         setContentView(R.layout.startup_page);
         //Check if the application has draw over other apps permission or not?
         //This permission is by default available for API<23. But for API > 23

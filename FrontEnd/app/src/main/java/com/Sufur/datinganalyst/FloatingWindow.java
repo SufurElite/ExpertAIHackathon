@@ -18,6 +18,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -44,11 +45,10 @@ public class FloatingWindow extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
-
+    private ImageView tmpImage;
     @Override
     public void onCreate() {
         super.onCreate();
-
         // The screen height and width are calculated, cause
         // the height and width of the floating window is set depending on this
         DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
@@ -77,6 +77,10 @@ public class FloatingWindow extends Service {
         descEditArea.setText(Common.currentDesc);
         descEditArea.setSelection(descEditArea.getText().toString().length());
         descEditArea.setCursorVisible(false);
+
+
+        tmpImage= floatView.findViewById(R.id.screenshotImage);
+        tmpImage.setImageBitmap(Common.bitmap);
 
         // WindowManager.LayoutParams takes a lot of parameters to set the
         // the parameters of the layout. One of them is Layout_type.

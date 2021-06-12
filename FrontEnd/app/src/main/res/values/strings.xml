@@ -5,4 +5,8 @@
     <string name="logoContentDesc">Logo on starting-page</string>
     <string name="logout">Logout</string>
     <string name="launch_btn">Launch AI</string>
+    <string name="dummy_email">tmp@tmp.com</string>
+    <string name="action_settings">Settings</string>
+    <string name="stop_analysis">Stop Analysis</string>
+    <string name="recording">Recording</string>
 </resources>
