@@ -1,5 +1,6 @@
 # FrontEnd Development
 Here are links I found useful to code &amp; tutorials for the FrontEnd.
+
 ## ChatHead and FloatingWindow
 ### ChatHead
 1. https://medium.com/@kevalpatel2106/create-chat-heads-like-facebook-messenger-32f7f1a62064
@@ -7,10 +8,8 @@ Here are links I found useful to code &amp; tutorials for the FrontEnd.
 ### FloatingWindow
 1. https://www.geeksforgeeks.org/how-to-make-a-floating-window-application-in-android/#:~:text=Go%20to%20res%20%2D%3E%20layout.,layout%20of%20the%20floating%20window.
 2. https://stackoverflow.com/questions/52980478/how-to-create-a-floating-window-like-clipboard-pro-app
-### Firebase Sign-in
-1. https://firebase.google.com/docs/auth/android/password-auth
-2. https://github.com/firebase/quickstart-android/blob/master/auth/README.md
-3. https://firebase.google.com/docs/android/setup
+
+## Screenshot
 ### Screenshot Functionality
 1. https://github.com/googlearchive/android-ScreenCapture
 2. https://github.com/mtsahakis/MediaProjectionDemo
@@ -20,4 +19,16 @@ Here are links I found useful to code &amp; tutorials for the FrontEnd.
 6. https://github.com/bolteu/screenshotty
 7. https://stackoverflow.com/questions/32513379/how-to-record-screen-and-take-screenshots-using-android-api 
 
+## BackEnd communication
+### Communication with Firestore &amp; Storage
+1. https://stackoverflow.com/questions/40885860/how-to-save-bitmap-to-firebase
+2. https://firebase.google.com/docs/firestore/quickstart#java
+3. https://stackoverflow.com/questions/50585334/tasksnapshot-getdownloadurl-method-not-working
+4. https://firebase.google.com/docs/storage/android/start
+5. https://firebase.google.com/docs/storage/android/upload-files
+
+### Firebase Sign-in
+1. https://firebase.google.com/docs/auth/android/password-auth
+2. https://github.com/firebase/quickstart-android/blob/master/auth/README.md
+3. https://firebase.google.com/docs/android/setup
 

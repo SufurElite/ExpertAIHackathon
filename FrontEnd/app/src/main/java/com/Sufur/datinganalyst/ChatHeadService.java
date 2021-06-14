@@ -95,6 +95,7 @@ public class ChatHeadService extends Service {
                 //Common.bitmap = Bitmap.createBitmap(view.getWidth() , view.getHeight(), Bitmap.Config.ARGB_8888);
                 //Canvas c = new Canvas(Common.bitmap);
                 //view.draw(c);
+                Common.floatingRunning = true;
                 Intent floatingWindow = new Intent(ChatHeadService.this, FloatingWindow.class);
                 floatingWindow.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startService(floatingWindow);

@@ -51,9 +51,8 @@ public class FloatingWindow extends Service {
         super.onCreate();
         // The screen height and width are calculated, cause
         // the height and width of the floating window is set depending on this
-        DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
-        int width = metrics.widthPixels;
-        int height = metrics.heightPixels;
+        int width = Common.displayWidth;
+        int height = Common.displayHeight;
 
         // To obtain a WindowManager of a different Display,
         // we need a Context for that display, so WINDOW_SERVICE is used
@@ -106,8 +105,8 @@ public class FloatingWindow extends Service {
         // 5) Next parameter is Layout_Format. System chooses a format that supports
         // translucency by PixelFormat.TRANSLUCENT
         floatWindowLayoutParam = new WindowManager.LayoutParams(
-                (int) (width * (0.55f)),
-                (int) (height * (0.58f)),
+                (int) (width * (0.758f)),
+                (int) (height * (0.80f)),
                 LAYOUT_TYPE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT
@@ -132,6 +131,7 @@ public class FloatingWindow extends Service {
                 // stopSelf() method is used to stop the service if
                 // it was previously started
                 stopSelf();
+                Common.floatingRunning = false;
 
                 // The window is removed from the screen
                 windowManager.removeView(floatView);
@@ -269,6 +269,7 @@ public class FloatingWindow extends Service {
     public void onDestroy() {
         super.onDestroy();
         stopSelf();
+        Common.floatingRunning = false;
         // Window is removed from the screen
         windowManager.removeView(floatView);
     }

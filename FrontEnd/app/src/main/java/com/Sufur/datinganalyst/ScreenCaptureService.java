@@ -15,6 +15,7 @@ import android.media.Image;
 import android.media.ImageReader;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -23,13 +24,23 @@ import android.view.Display;
 import android.view.OrientationEventListener;
 import android.view.WindowManager;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Objects;
 
+import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
+import java.util.Random;
 
 public class ScreenCaptureService extends Service {
 
@@ -101,8 +112,10 @@ public class ScreenCaptureService extends Service {
                             // create bitmap
                             bitmap = Bitmap.createBitmap(mWidth + rowPadding / pixelStride, mHeight, Bitmap.Config.ARGB_8888);
                             bitmap.copyPixelsFromBuffer(buffer);
-
-                            Common.bitmap = bitmap;
+                            if(!Common.floatingRunning) {
+                                Common.bitmap = bitmap;
+                                uploadImageToFireStorage();
+                            }
                             IMAGES_PRODUCED++;
                             Log.e(TAG, "captured image: " + IMAGES_PRODUCED);
                         }
@@ -111,7 +124,50 @@ public class ScreenCaptureService extends Service {
                         e.printStackTrace();
                     }
                 }
-            }, 75000);
+            }, 5000);
+        }
+
+        private void uploadImageToFireStorage(){
+            Random rand = new Random();
+            String title = "bitmap_"+Float.toString(rand.nextFloat()) + ".jpg";
+            String location = "images/"+title;
+            // Create a storage reference from our app
+            StorageReference storageRef = Common.db.getReferenceFromUrl("gs://");
+            Log.e(TAG, storageRef.getName());
+            Log.e(TAG, storageRef.getBucket());
+            // Create a reference to the title
+            //StorageReference bitmapRef = storageRef.child(title);
+
+            // Create a reference to 'images/title'
+            StorageReference bitmapImagesRef = storageRef.child(location);
+
+            /*
+            // While the file names are the same, the references point to different files
+            mountainsRef.getName().equals(mountainImagesRef.getName());    // true
+            mountainsRef.getPath().equals(mountainImagesRef.getPath());    // false
+            */
+            // Converting the bitmap to Bytes
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            Common.bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+
+            UploadTask uploadTask = bitmapImagesRef.putBytes(data);
+
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                    Log.e(TAG, "Upload unsuccessful");
+                    Log.e(TAG, exception.getMessage());
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                    // ...
+                    Log.e(TAG, "Upload successful!");
+                }
+            });
         }
     }
 

@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,6 +29,7 @@ public class ChatActivity extends AppCompatActivity {
         textView = findViewById(R.id.viewEmail);
         textView.setText(Common.currentUser.getEmail());
         launchButton = findViewById(R.id.createChatHead);
+        Common.db = FirebaseStorage.getInstance("gs://");
         initializeView();
     }
 
@@ -35,7 +38,6 @@ public class ChatActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                Log.e("bitmap","start");
                 startService(com.Sufur.datinganalyst.ScreenCaptureService.getStartIntent(this, resultCode, data));
             }
         }
@@ -83,8 +85,14 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void stopProjection() {
-        Log.e("bitmap","end");
         startService(com.Sufur.datinganalyst.ScreenCaptureService.getStopIntent(this));
     }
 
+    @Override
+    public void onDestroy()
+    {
+        // Make sure to stop recording if the app is closed
+        stopProjection();
+        super.onDestroy();
+    }
 }
