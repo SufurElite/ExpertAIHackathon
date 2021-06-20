@@ -1,0 +1,7 @@
+Werkzeug==1.0.1
+Flask==1.1.2
+protobuf==3.17.3
+google-cloud
+google-cloud-vision
+google-cloud-storage
+PIL

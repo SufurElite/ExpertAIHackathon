@@ -32,3 +32,7 @@ Here are links I found useful to code &amp; tutorials for the FrontEnd.
 2. https://github.com/firebase/quickstart-android/blob/master/auth/README.md
 3. https://firebase.google.com/docs/android/setup
 
+### Retrofit Bitmap Send
+1. https://stackoverflow.com/questions/45828401/how-to-post-a-bitmap-to-a-server-using-retrofit-android
+
+
