@@ -135,9 +135,10 @@ def loadImageText(path):
     blob = files[0]
     print(blob.name) 
     print("downloading picture")
-    with open(os.getcwd()+"/tmpFile", "wb") as file_obj:
-        blob.download_to_file(file_obj)
-    im = Image.open(os.getcwd()+"/tmpFile").convert('RGB')
+    blobString = blob.download_as_string()
+    blobBytes = io.BytesIO(blobString)
+    im = Image.open(blobBytes)
+    im = Image.open(blobBytes).convert('RGB')
     na = np.array(im)
     orig = na.copy()    # Save original
     imageWidth = im.size[0]
@@ -152,7 +153,6 @@ def loadImageText(path):
             res+="User : " + i.getText()+"<br/>"
         else:
             res+="Match : " + i.getText()+"<br/>"
-    os.remove(os.getcwd()+"/tmpFile")
     return res
 
 # GET

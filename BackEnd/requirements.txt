@@ -4,4 +4,5 @@ protobuf==3.17.3
 google-cloud
 google-cloud-vision
 google-cloud-storage
-PIL
+Pillow
+numpy
