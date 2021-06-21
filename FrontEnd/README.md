@@ -36,3 +36,5 @@ Here are links I found useful to code &amp; tutorials for the FrontEnd.
 1. https://stackoverflow.com/questions/45828401/how-to-post-a-bitmap-to-a-server-using-retrofit-android
 
 
+# To-Do : 
+* Create own gif asset for central loading screen and replace it
