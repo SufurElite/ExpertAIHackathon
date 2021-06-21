@@ -5,19 +5,26 @@ from google.cloud import vision
 from google.cloud import storage
 import numpy as np
 from PIL import Image, ImageFilter, ImageOps
+from expertai.nlapi.cloud.client import ExpertAiClient
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
 # called `app` in `main.py`.
 app = Flask(__name__)
+# Set environment variables
+os.environ['EAI_USERNAME'] = ''
+os.environ['EAI_PASSWORD'] = ''
 
 class Message:
-    def __init__(self, top, bottom, left, right, isUser, text):
+    def __init__(self, top, bottom, left, right, isUser, text, overallSentiment, positiveSentiment, negativeSentiment):
        self.top = top
        self.bottom = bottom
        self.left = left
        self.right = right
        self.isUser = isUser
        self.text = text
+       self.overallSentiment = overallSentiment
+       self.positiveSentiment = positiveSentiment
+       self.negativeSentiment = negativeSentiment
     def getCoords(self):
         return(self.top, self.bottom, self.left, self.right)
     def setText(self, text):
@@ -26,7 +33,10 @@ class Message:
         return self.text
     def isUser(self):
         return self.isUser
-
+    def getOverallSentiment(self):
+        return self.overallSentiment
+    def getSentimentAsText(self):
+        return "Overall sentiment: "+str(self.overallSentiment)#+", positivity: " + str(self.positiveSentiment)+", negativity: " + str(self.negativeSentiment) 
 
 @app.route('/')
 def hello():
@@ -50,7 +60,11 @@ def getMessages(imageArray, orig, cutoffMargin, inwardMargin, rightwardMargin):
     bottom = userY[0]
     userInd = 0
     matchInd = 0
-    client = vision.ImageAnnotatorClient()
+    visionClient = vision.ImageAnnotatorClient()
+    aiClient = ExpertAiClient()
+
+    language= 'en'
+
     while userInd+1<absoluteBottom or matchInd+1<absoluteBottom:
         if matchInd<len(matchY)-1 and userInd<len(userY)-1:
             #print(matchInd, userInd)
@@ -108,9 +122,25 @@ def getMessages(imageArray, orig, cutoffMargin, inwardMargin, rightwardMargin):
             imgByteArr = imgByteArr.getvalue()
             image = vision.Image(content=imgByteArr)
 
-            response = client.document_text_detection(image=image)
+            response = visionClient.document_text_detection(image=image)
             text = response.full_text_annotation.text
-            conversation.append(Message(top, bottom, left, right, isUser, text))
+            output = aiClient.specific_resource_analysis(
+                body={"document": {"text": text}}, 
+                params={'language': language, 'resource': 'sentiment'
+            })
+            """
+            taxonomy2 = 'behavioral-traits'
+            taxonomy = 'emotional-traits'
+            language= 'en'
+
+            output = client.classification(body={"document": {"text": text}}, params={'taxonomy': taxonomy, 'language': language})
+
+            print("Tab separated list of categories:")
+
+            for category in output.categories:
+                print(category.id_, category.hierarchy, sep="\t")
+            """
+            conversation.append(Message(top, bottom, left, right, isUser, text, output.sentiment.overall, output.sentiment.positivity, output.sentiment.negativity))
     return conversation
 
 @app.route('/getImageText/<path>')
@@ -148,11 +178,31 @@ def loadImageText(path):
     rightwardMargin = int(.07*imageWidth)
     L = getMessages(na, orig, cutoffMargin, inwardMargin, rightwardMargin)     
     res = ""
+    sentiment = 0
+    totalText = ""
     for i in L:
         if i.isUser:
-            res+="User : " + i.getText()+"<br/>"
+            res+="User : " + i.getText()+"| " + i.getSentimentAsText()+"<br/>"
         else:
-            res+="Match : " + i.getText()+"<br/>"
+            res+="Match : " + i.getText()+"| " + i.getSentimentAsText()+"<br/>"
+        totalText+=i.getText() + ". "
+        sentiment+=i.getOverallSentiment()
+    res+="<br/>Overall Sentiment By Message: " + str(sentiment)
+    aiClient = ExpertAiClient()
+    output = aiClient.specific_resource_analysis(
+                body={"document": {"text": totalText}}, 
+                params={'language': "en", 'resource': 'sentiment'
+    })
+    res+="<br/> Overall sentiment by totality: " + str(output.sentiment.overall)
+
+    output = aiClient.classification(body={"document": {"text": totalText}}, params={'taxonomy': "behavioral-traits", 'language': "en"})
+    res+="<br/> number of behavioral traits: " + str(len(output.categories))
+    for category in output.categories:
+        res+= "<br/>" + '\t'.join(category.hierarchy)
+    output = aiClient.classification(body={"document": {"text": totalText}}, params={'taxonomy': "emotional-traits", 'language': "en"})
+    res+="<br/> number of emotional traits: " + str(len(output.categories))
+    for category in output.categories:
+        res+= "<br/>" + '\t'.join(category.hierarchy)
     return res
 
 # GET

@@ -6,3 +6,4 @@ google-cloud-vision
 google-cloud-storage
 Pillow
 numpy
+expertai-nlapi
