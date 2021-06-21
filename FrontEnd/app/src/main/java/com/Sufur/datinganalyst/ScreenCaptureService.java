@@ -16,6 +16,7 @@ import android.media.ImageReader;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -33,6 +34,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -40,6 +42,14 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import java.util.Random;
 
 public class ScreenCaptureService extends Service {
@@ -56,6 +66,7 @@ public class ScreenCaptureService extends Service {
 
     private MediaProjection mMediaProjection;
     //private String mStoreDir;
+    private ApiInterface apiInterface;
     private ImageReader mImageReader;
     private Handler mHandler;
     private Display mDisplay;
@@ -100,31 +111,34 @@ public class ScreenCaptureService extends Service {
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Bitmap bitmap = null;
-                    try (Image image = mImageReader.acquireLatestImage()) {
-                        if (image != null) {
-                            Image.Plane[] planes = image.getPlanes();
-                            ByteBuffer buffer = planes[0].getBuffer();
-                            int pixelStride = planes[0].getPixelStride();
-                            int rowStride = planes[0].getRowStride();
-                            int rowPadding = rowStride - pixelStride * mWidth;
+                    synchronized (this) {
+                        Bitmap bitmap = null;
+                        try (Image image = mImageReader.acquireLatestImage()) {
+                            if (image != null) {
+                                Image.Plane[] planes = image.getPlanes();
+                                ByteBuffer buffer = planes[0].getBuffer();
+                                int pixelStride = planes[0].getPixelStride();
+                                int rowStride = planes[0].getRowStride();
+                                int rowPadding = rowStride - pixelStride * mWidth;
 
-                            // create bitmap
-                            bitmap = Bitmap.createBitmap(mWidth + rowPadding / pixelStride, mHeight, Bitmap.Config.ARGB_8888);
-                            bitmap.copyPixelsFromBuffer(buffer);
-                            if(!Common.floatingRunning) {
-                                Common.bitmap = bitmap;
-                                uploadImageToFireStorage();
+                                // create bitmap
+                                bitmap = Bitmap.createBitmap(mWidth + rowPadding / pixelStride, mHeight, Bitmap.Config.ARGB_8888);
+                                bitmap.copyPixelsFromBuffer(buffer);
+                                if (!Common.floatingRunning) {
+                                    Log.e(TAG, "Began Sending");
+                                    Common.bitmap = bitmap;
+                                    uploadImageToFireStorage();
+                                    IMAGES_PRODUCED++;
+                                    Log.e(TAG, "captured image: " + IMAGES_PRODUCED);
+                                }
                             }
-                            IMAGES_PRODUCED++;
-                            Log.e(TAG, "captured image: " + IMAGES_PRODUCED);
-                        }
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
-            }, 5000);
+            }, 15000);
         }
 
         private void uploadImageToFireStorage(){
@@ -132,15 +146,15 @@ public class ScreenCaptureService extends Service {
             String title = "bitmap_"+Float.toString(rand.nextFloat()) + ".jpg";
             String location = "images/"+title;
             // Create a storage reference from our app
-            StorageReference storageRef = Common.db.getReferenceFromUrl("gs://");
-            Log.e(TAG, storageRef.getName());
-            Log.e(TAG, storageRef.getBucket());
+            StorageReference storageRef = Common.db.getReferenceFromUrl("gs://chadvice.appspot.com");
+
+            //Log.e(TAG, storageRef.getName());
+            //Log.e(TAG, storageRef.getBucket());
             // Create a reference to the title
             //StorageReference bitmapRef = storageRef.child(title);
 
             // Create a reference to 'images/title'
             StorageReference bitmapImagesRef = storageRef.child(location);
-
             /*
             // While the file names are the same, the references point to different files
             mountainsRef.getName().equals(mountainImagesRef.getName());    // true
@@ -166,9 +180,69 @@ public class ScreenCaptureService extends Service {
                     // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
                     // ...
                     Log.e(TAG, "Upload successful!");
+                    Log.e(TAG, "Starting /getImageText/"+title);
+                    Call<String> call = apiInterface.postImage(title);
+                    call.enqueue(new Callback<String>() {
+                        @Override
+                        public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
+                            String res = response.body();
+                            Log.e(TAG,"Submitted Correctly "+response.isSuccessful());
+                            Common.textFromConvo = res;
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+                            Log.e("Communication",t.getMessage());
+                        }
+                    });
                 }
             });
         }
+
+        /*
+        private void sendImageToBackend() throws IOException {
+            Context context = getApplicationContext();
+            //create a file to write bitmap data
+            File f = new File(context.getCacheDir(), "image.jpeg");
+            f.createNewFile();
+
+            // Converting the bitmap to Bytes
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            Common.bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+
+            //write the bytes in file
+            FileOutputStream fos = null;
+            try {
+                fos = new FileOutputStream(f);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            try {
+                fos.write(data);
+                fos.flush();
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), f);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("upload", f.getName(), reqFile);
+
+            Call<String> req = apiInterface.postImage(body);
+            req.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
+                    Log.e(TAG,Boolean.toString(response.isSuccessful()));
+                    Log.e(TAG,"Yes no?" + response.message());
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+                    Log.e("Image Sent", t.getMessage());
+                }
+            });
+        }*/
     }
 
     private class OrientationChangeCallback extends OrientationEventListener {
@@ -221,6 +295,7 @@ public class ScreenCaptureService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        this.apiInterface = ApiClient.getApiClient('s').create(ApiInterface.class);
         Log.e(TAG, "starting projection.");
         // create store dir
         /*File externalFilesDir = getExternalFilesDir(null);

@@ -15,11 +15,19 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ChatActivity extends AppCompatActivity {
     private TextView textView;
+    private TextView resultText;
     private Button launchButton;
+    private Button postDebugBtn;
+    private Button getDebugBtn;
+    private ApiInterface apiInterface;
     private static final int REQUEST_CODE = 100;
 
     @Override
@@ -28,8 +36,12 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.signedin_activity);
         textView = findViewById(R.id.viewEmail);
         textView.setText(Common.currentUser.getEmail());
+        resultText = findViewById(R.id.text1);
         launchButton = findViewById(R.id.createChatHead);
-        Common.db = FirebaseStorage.getInstance("gs://");
+        Common.db = FirebaseStorage.getInstance("gs://chadvice.appspot.com");
+        apiInterface = ApiClient.getApiClient('s').create(ApiInterface.class);
+        postDebugBtn = findViewById(R.id.postFromServer);
+        getDebugBtn = findViewById(R.id.getFromServer);
         initializeView();
     }
 
@@ -73,6 +85,33 @@ public class ChatActivity extends AppCompatActivity {
                 Common.currentUser = null;
                 startActivity(new Intent(ChatActivity.this, MainActivity.class));
                 finish();
+            }
+        });
+
+        postDebugBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        getDebugBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Call<String> call = apiInterface.getApiResponse(Common.currentUser.getEmail());
+                call.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
+                        String res = response.body().toString();
+                        resultText.setText(res);
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+                        resultText.setText("Failure to communicate");
+                        Log.e("Communication",t.getMessage());
+                    }
+                });
             }
         });
     }

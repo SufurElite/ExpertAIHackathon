@@ -8,9 +8,10 @@ import com.google.firebase.storage.FirebaseStorage;
 
 public class Common {
     // the string will be saved in here when min/max is pressed
-    public static String currentDesc = "";
+    public static String currentInput = "";
     // string stored here when save is pressed
-    public static String savedDesc = "";
+    public static String savedInput = "";
+    public static String textFromConvo = "";
     public static FirebaseUser currentUser;
     public static FirebaseStorage db;
     public static Bitmap bitmap;

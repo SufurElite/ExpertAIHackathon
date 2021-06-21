@@ -38,35 +38,36 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.4" />
+        app:layout_constraintGuide_percent="0.88" />
 
     <EditText
-        android:id="@+id/descEditText"
+        android:id="@+id/inputText"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:gravity="start"
-        android:hint="Description"
+        android:hint="Input A Potential Next Message"
         android:paddingLeft="20dp"
         android:paddingTop="10dp"
         android:paddingRight="20dp"
         android:paddingBottom="10dp"
         android:textColor="@android:color/black"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bottom_guideline" />
+
+    <TextView
+        android:id="@+id/conversationText"
+        android:layout_width="wrap_content"
+        android:textSize="10sp"
+        android:textColor="@color/teal_700"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/inputText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleText" />
-
-    <ImageView
-        android:id="@+id/screenshotImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/saveBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descEditText" />
 
     <Button
         android:id="@+id/saveBtn"
@@ -77,6 +78,7 @@
         android:text="SAVE"
         android:textColor="@android:color/white"
         android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@id/inputText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

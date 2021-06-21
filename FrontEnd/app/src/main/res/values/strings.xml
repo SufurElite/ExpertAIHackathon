@@ -8,5 +8,7 @@
     <string name="dummy_email">tmp@tmp.com</string>
     <string name="action_settings">Settings</string>
     <string name="stop_analysis">Stop Analysis</string>
+    <string name="test_post_btn">test post</string>
+    <string name="test_get_btn">test get</string>
     <string name="recording">Recording</string>
 </resources>

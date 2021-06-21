@@ -19,6 +19,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -35,7 +36,7 @@ public class FloatingWindow extends Service {
     private WindowManager.LayoutParams floatWindowLayoutParam;
     private WindowManager windowManager;
     private Button closeBtn;
-    private EditText descEditArea;
+    private EditText inputArea;
     private Button saveBtn;
 
     // As FloatingWindowGFG inherits Service class,
@@ -45,7 +46,7 @@ public class FloatingWindow extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
-    private ImageView tmpImage;
+    private TextView featureText;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -68,18 +69,20 @@ public class FloatingWindow extends Service {
         // The Buttons and the EditText are connected with
         // the corresponding component id used in floating_layout xml file
         closeBtn = floatView.findViewById(R.id.chatActivityCloseButton);
-        descEditArea = floatView.findViewById(R.id.descEditText);
+        inputArea = floatView.findViewById(R.id.inputText);
         saveBtn = floatView.findViewById(R.id.saveBtn);
 
         // Just like MainActivity, the text written
         // in Maximized will stay
-        descEditArea.setText(Common.currentDesc);
-        descEditArea.setSelection(descEditArea.getText().toString().length());
-        descEditArea.setCursorVisible(false);
+        inputArea.setText(Common.currentInput);
+        inputArea.setSelection(inputArea.getText().toString().length());
+        inputArea.setCursorVisible(false);
 
 
-        tmpImage= floatView.findViewById(R.id.screenshotImage);
-        tmpImage.setImageBitmap(Common.bitmap);
+        featureText= floatView.findViewById(R.id.conversationText);
+        if(Common.textFromConvo!=""){
+            featureText.setText(Common.textFromConvo.replace("<br/>","\n"));
+        }
 
         // WindowManager.LayoutParams takes a lot of parameters to set the
         // the parameters of the layout. One of them is Layout_type.
@@ -155,7 +158,7 @@ public class FloatingWindow extends Service {
 
         // The EditText string will be stored
         // in currentDesc while writing
-        descEditArea.addTextChangedListener(new TextWatcher() {
+        inputArea.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 // Not Necessary
@@ -163,7 +166,7 @@ public class FloatingWindow extends Service {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                Common.currentDesc = descEditArea.getText().toString();
+                Common.currentInput = inputArea.getText().toString();
             }
 
             @Override
@@ -218,10 +221,10 @@ public class FloatingWindow extends Service {
         // so no input is possible to the EditText. But that's a problem.
         // So, the problem is solved here. The Layout Flag is
         // changed when the EditText is touched.
-        descEditArea.setOnTouchListener(new View.OnTouchListener() {
+        inputArea.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                descEditArea.setCursorVisible(true);
+                inputArea.setCursorVisible(true);
                 WindowManager.LayoutParams floatWindowLayoutParamUpdateFlag = floatWindowLayoutParam;
                 // Layout Flag is changed to FLAG_NOT_TOUCH_MODAL which
                 // helps to take inputs inside floating window, but
@@ -240,9 +243,9 @@ public class FloatingWindow extends Service {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // saves the text in savedDesc variable
-                Common.savedDesc = descEditArea.getText().toString();
-                descEditArea.setCursorVisible(false);
+                // saves the text in savedInput variable
+                Common.savedInput = inputArea.getText().toString();
+                inputArea.setCursorVisible(false);
                 WindowManager.LayoutParams floatWindowLayoutParamUpdateFlag = floatWindowLayoutParam;
                 floatWindowLayoutParamUpdateFlag.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
 
