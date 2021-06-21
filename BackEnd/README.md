@@ -20,5 +20,9 @@ Here are links I found useful to code &amp; tutorials for the BackEnd.
 * Code: https://github.com/facebookresearch/ParlAI/tree/controllable_dialogue_archive/projects/controllable_dialogue
 
 # To-Do : 
-* Get more human data evaluating conversation attributes to better fine-tune the Seq 2 Seq Model
+* Get more human data evaluating conversation attributes to better fine-tune the predictions
+* Maybe explore more important factors for communicating with people on tinder (e.g. for a chatbot inquisitiveness and listening is quite useful, but perhaps for tinder there are more pertinent conversation aspects - such as the balance of flirting and outright crude comments)
 * Acquire more data from tinder conversations and their result to fine-tune binary ghosted model
+* Input a potential line to see what the AI makes of your follow-up
+* Currently it's an instantaneous overview of the conversation rather than the full conversation, would like to take prior elements of the conversation into account
+

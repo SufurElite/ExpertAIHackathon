@@ -38,7 +38,6 @@ public class FloatingWindow extends Service {
     private Button closeBtn;
     private EditText inputArea;
     private Button saveBtn;
-
     // As FloatingWindowGFG inherits Service class,
     // it actually overrides the onBind method
     @Nullable
@@ -46,7 +45,7 @@ public class FloatingWindow extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
-    private TextView featureText;
+    //private TextView featureText;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -64,7 +63,7 @@ public class FloatingWindow extends Service {
         LayoutInflater inflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
 
         // inflate a new view hierarchy from the floating_layout xml
-        floatView = (ViewGroup) inflater.inflate(R.layout.activity_chat, null);
+        floatView = (ViewGroup) inflater.inflate(R.layout.floating_layout, null);
 
         // The Buttons and the EditText are connected with
         // the corresponding component id used in floating_layout xml file
@@ -72,17 +71,57 @@ public class FloatingWindow extends Service {
         inputArea = floatView.findViewById(R.id.inputText);
         saveBtn = floatView.findViewById(R.id.saveBtn);
 
+        // Set inquisitive images
+        ImageView imageView = floatView.findViewById(R.id.inquisitiveMin);
+        imageView.setImageResource(R.drawable.ic_mouthshut);
+        imageView = floatView.findViewById(R.id.inquisitiveEmojiOne);
+        imageView.setImageResource(R.drawable.ic_redcircle);
+        imageView = floatView.findViewById(R.id.inquisitiveEmojiTwo);
+        imageView.setImageResource(R.drawable.ic_yellowcircle);
+        imageView = floatView.findViewById(R.id.inquisitiveEmojiThree);
+        imageView.setImageResource(R.drawable.ic_yellowcircle);
+        imageView = floatView.findViewById(R.id.inquisitiveEmojiFour);
+        imageView.setImageResource(R.drawable.ic_greencircle);
+        imageView = floatView.findViewById(R.id.inquisitiveMax);
+        imageView.setImageResource(R.drawable.ic_think);
+
+        imageView = floatView.findViewById(R.id.interestingMin);
+        imageView.setImageResource(R.drawable.ic_sleep);
+        imageView = floatView.findViewById(R.id.interestingEmojiOne);
+        imageView.setImageResource(R.drawable.ic_redcircle);
+        imageView = floatView.findViewById(R.id.interestingEmojiTwo);
+        imageView.setImageResource(R.drawable.ic_yellowcircle);
+        imageView = floatView.findViewById(R.id.interestingEmojiThree);
+        imageView.setImageResource(R.drawable.ic_yellowcircle);
+        imageView = floatView.findViewById(R.id.interestingEmojiFour);
+        imageView.setImageResource(R.drawable.ic_greencircle);
+        imageView = floatView.findViewById(R.id.interestingMax);
+        imageView.setImageResource(R.drawable.ic_stareyes);
+
+        imageView = floatView.findViewById(R.id.ghostedEmojiMin);
+        imageView.setImageResource(R.drawable.ic_ghosted);
+        imageView = floatView.findViewById(R.id.ghostedEmojiOne);
+        imageView.setImageResource(R.drawable.ic_redcircle);
+        imageView = floatView.findViewById(R.id.ghostedEmojiTwo);
+        imageView.setImageResource(R.drawable.ic_yellowcircle);
+        imageView = floatView.findViewById(R.id.ghostedEmojiThree);
+        imageView.setImageResource(R.drawable.ic_yellowcircle);
+        imageView = floatView.findViewById(R.id.ghostedEmojiFour);
+        imageView.setImageResource(R.drawable.ic_greencircle);
+        imageView = floatView.findViewById(R.id.ghostedEmojiMax);
+        imageView.setImageResource(R.drawable.ic_coolglasses);
+
         // Just like MainActivity, the text written
         // in Maximized will stay
         inputArea.setText(Common.currentInput);
         inputArea.setSelection(inputArea.getText().toString().length());
         inputArea.setCursorVisible(false);
 
-
+        /*
         featureText= floatView.findViewById(R.id.conversationText);
         if(Common.textFromConvo!=""){
             featureText.setText(Common.textFromConvo.replace("<br/>","\n"));
-        }
+        }*/
 
         // WindowManager.LayoutParams takes a lot of parameters to set the
         // the parameters of the layout. One of them is Layout_type.
@@ -127,7 +166,7 @@ public class FloatingWindow extends Service {
         // added to the WindowManager with all the parameters
         windowManager.addView(floatView, floatWindowLayoutParam);
 
-        // The button that helps to maximize the app
+        // The button that helps to minimise the app
         closeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

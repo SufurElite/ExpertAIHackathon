@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <Button
+        android:id="@+id/chatActivityCloseButton"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/teal_200"
+        android:text="@string/minimise"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/saveBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/teal_200"
+        android:text="@string/enter"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bottom_guideline" />
+
+    <EditText
+        android:id="@+id/inputText"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="start"
+        android:hint="@string/inputMessage"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="10dp"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_guideline" />
+
+    <ImageView
+        android:id="@+id/inquisitiveMin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/emojiLeft"
+        app:layout_constraintTop_toBottomOf="@id/inquisitiveProb"
+        app:layout_constraintBottom_toTopOf="@id/inquisitiveEmojiBottom"
+        app:layout_constraintRight_toLeftOf="@id/emojiLeftTwo"
+
+        app:srcCompat="@drawable/ic_mouthshut"
+        tools:srcCompat="@drawable/ic_mouthshut" />
+
+    <ImageView
+        android:id="@+id/inquisitiveEmojiOne"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/inquisitiveMin"
+        app:layout_constraintRight_toLeftOf="@id/emojiTwoLeft"
+        app:layout_constraintTop_toBottomOf="@id/inquisitiveProb"
+        app:layout_constraintBottom_toTopOf="@id/inquisitiveEmojiBottom"
+        app:srcCompat="@drawable/ic_redcircle"
+        tools:srcCompat="@drawable/ic_redcircle"/>
+
+    <ImageView
+        android:id="@+id/inquisitiveEmojiTwo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/emojiTwoLeft"
+        app:layout_constraintRight_toLeftOf="@id/emojiThreeLeft"
+        app:layout_constraintTop_toBottomOf="@id/inquisitiveProb"
+        app:layout_constraintBottom_toTopOf="@id/inquisitiveEmojiBottom"
+        app:srcCompat="@drawable/ic_yellowcircle"
+        tools:srcCompat="@drawable/ic_yellowcircle"/>
+
+    <ImageView
+        android:id="@+id/inquisitiveEmojiThree"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/emojiThreeLeft"
+        app:layout_constraintRight_toLeftOf="@id/emojiFourLeft"
+        app:layout_constraintTop_toBottomOf="@id/inquisitiveProb"
+        app:layout_constraintBottom_toTopOf="@id/inquisitiveEmojiBottom"
+        app:srcCompat="@drawable/ic_yellowcircle"
+        tools:srcCompat="@drawable/ic_yellowcircle" />
+
+    <ImageView
+        android:id="@+id/inquisitiveEmojiFour"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/emojiFourLeft"
+        app:layout_constraintRight_toLeftOf="@id/emojiFiveLeft"
+        app:layout_constraintTop_toBottomOf="@id/inquisitiveProb"
+        app:layout_constraintBottom_toTopOf="@id/inquisitiveEmojiBottom"
+        app:srcCompat="@drawable/ic_greencircle"
+        tools:srcCompat="@drawable/ic_greencircle" />
+
+    <ImageView
+        android:id="@+id/inquisitiveMax"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/emojiRightTwo"
+        app:layout_constraintRight_toLeftOf="@id/emojiRight"
+        app:layout_constraintTop_toBottomOf="@id/inquisitiveProb"
+        app:layout_constraintBottom_toTopOf="@id/inquisitiveEmojiBottom"
+        app:srcCompat="@drawable/ic_think"
+        tools:srcCompat="@drawable/ic_think" />
+
+    <ImageView
+        android:id="@+id/interestingMin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/emojiLeft"
+        app:layout_constraintTop_toBottomOf="@id/interestProb"
+        app:layout_constraintBottom_toTopOf="@id/interestEmojiBottom"
+        app:layout_constraintRight_toLeftOf="@id/emojiLeftTwo"
+        app:srcCompat="@drawable/ic_sleep"
+        tools:srcCompat="@drawable/ic_sleep" />
+
+    <ImageView
+        android:id="@+id/interestingEmojiOne"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/interestingMin"
+        app:layout_constraintRight_toLeftOf="@id/emojiTwoLeft"
+        app:layout_constraintTop_toBottomOf="@id/interestProb"
+        app:layout_constraintBottom_toTopOf="@id/interestEmojiBottom"
+        app:srcCompat="@drawable/ic_redcircle"
+        tools:srcCompat="@drawable/ic_redcircle" />
+
+    <ImageView
+        android:id="@+id/interestingEmojiTwo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/emojiTwoLeft"
+        app:layout_constraintRight_toLeftOf="@id/emojiThreeLeft"
+        app:layout_constraintTop_toBottomOf="@id/interestProb"
+        app:layout_constraintBottom_toTopOf="@id/interestEmojiBottom"
+        app:srcCompat="@drawable/ic_yellowcircle"
+        tools:srcCompat="@drawable/ic_yellowcircle" />
+
+    <ImageView
+        android:id="@+id/interestingEmojiThree"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/emojiThreeLeft"
+        app:layout_constraintRight_toLeftOf="@id/emojiFourLeft"
+        app:layout_constraintTop_toBottomOf="@id/interestProb"
+        app:layout_constraintBottom_toTopOf="@id/interestEmojiBottom"
+        app:srcCompat="@drawable/ic_yellowcircle"
+        tools:srcCompat="@drawable/ic_yellowcircle" />
+
+    <ImageView
+        android:id="@+id/interestingEmojiFour"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/emojiFourLeft"
+        app:layout_constraintRight_toLeftOf="@id/emojiFiveLeft"
+        app:layout_constraintTop_toBottomOf="@id/interestProb"
+        app:layout_constraintBottom_toTopOf="@id/interestEmojiBottom"
+        app:srcCompat="@drawable/ic_greencircle"
+        tools:srcCompat="@drawable/ic_greencircle" />
+
+    <ImageView
+        android:id="@+id/interestingMax"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/emojiRightTwo"
+        app:layout_constraintRight_toLeftOf="@id/emojiRight"
+        app:layout_constraintTop_toBottomOf="@id/interestProb"
+        app:layout_constraintBottom_toTopOf="@id/interestEmojiBottom"
+        app:srcCompat="@drawable/ic_stareyes"
+        tools:srcCompat="@drawable/ic_stareyes" />
+
+    <ImageView
+        android:id="@+id/ghostedEmojiMin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/emojiLeft"
+        app:layout_constraintTop_toBottomOf="@id/ghostedProb"
+        app:layout_constraintBottom_toTopOf="@id/ghostedEmojiBottom"
+        app:layout_constraintRight_toLeftOf="@id/emojiLeftTwo"
+        app:srcCompat="@drawable/ic_ghosted"
+        tools:srcCompat="@drawable/ic_ghosted" />
+
+    <ImageView
+        android:id="@+id/ghostedEmojiOne"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/ghostedEmojiMin"
+        app:layout_constraintRight_toLeftOf="@id/emojiTwoLeft"
+        app:layout_constraintTop_toBottomOf="@id/ghostedProb"
+        app:layout_constraintBottom_toTopOf="@id/ghostedEmojiBottom"
+        app:srcCompat="@drawable/ic_redcircle"
+        tools:srcCompat="@drawable/ic_redcircle" />
+
+    <ImageView
+        android:id="@+id/ghostedEmojiTwo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/emojiTwoLeft"
+        app:layout_constraintRight_toLeftOf="@id/emojiThreeLeft"
+        app:layout_constraintTop_toBottomOf="@id/ghostedProb"
+        app:layout_constraintBottom_toTopOf="@id/ghostedEmojiBottom"
+        app:srcCompat="@drawable/ic_yellowcircle"
+        tools:srcCompat="@drawable/ic_yellowcircle" />
+
+    <ImageView
+        android:id="@+id/ghostedEmojiThree"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/emojiThreeLeft"
+        app:layout_constraintRight_toLeftOf="@id/emojiFourLeft"
+        app:layout_constraintTop_toBottomOf="@id/ghostedProb"
+        app:layout_constraintBottom_toTopOf="@id/ghostedEmojiBottom"
+        app:srcCompat="@drawable/ic_yellowcircle"
+        tools:srcCompat="@drawable/ic_yellowcircle" />
+
+    <ImageView
+        android:id="@+id/ghostedEmojiFour"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/emojiFourLeft"
+        app:layout_constraintRight_toLeftOf="@id/emojiFiveLeft"
+        app:layout_constraintTop_toBottomOf="@id/ghostedProb"
+        app:layout_constraintBottom_toTopOf="@id/ghostedEmojiBottom"
+        app:srcCompat="@drawable/ic_greencircle"
+        tools:srcCompat="@drawable/ic_greencircle" />
+
+    <ImageView
+        android:id="@+id/ghostedEmojiMax"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toLeftOf="@id/emojiRight"
+        app:layout_constraintTop_toBottomOf="@id/ghostedProb"
+        app:layout_constraintBottom_toTopOf="@id/ghostedEmojiBottom"
+        app:layout_constraintLeft_toRightOf="@id/emojiRightTwo"
+        app:srcCompat="@drawable/ic_coolglasses"
+        tools:srcCompat="@drawable/ic_coolglasses" />
+
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/analysis_loading"
+        android:textColor="@color/purple_700"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toRightOf="@id/emojiOneLeft"
+        app:layout_constraintRight_toLeftOf="@id/emojiFiveLeft"
+        app:layout_constraintBottom_toTopOf="@id/inquisitiveProb"
+        app:layout_constraintTop_toBottomOf="@+id/chatActivityCloseButton" />
+
+    <TextView
+        android:id="@+id/inquisitiveProb"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/inquisitiveFeat"
+        android:textColor="@color/teal_700"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toRightOf="@id/emojiOneLeft"
+        app:layout_constraintRight_toLeftOf="@id/emojiFiveLeft"
+        app:layout_constraintTop_toBottomOf="@+id/inquisitiveLine"
+        app:layout_constraintBottom_toTopOf="@+id/inquisitiveLineBottom"/>
+
+    <!--android:textSize="22sp"-->
+    <TextView
+        android:id="@+id/interestProb"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/interestFeat"
+        android:textColor="@color/teal_700"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toRightOf="@id/emojiOneLeft"
+        app:layout_constraintRight_toLeftOf="@id/emojiFiveLeft"
+        app:layout_constraintTop_toBottomOf="@+id/interestLine"
+        app:layout_constraintBottom_toTopOf="@id/interestLineBottom"/>
+
+    <TextView
+        android:id="@+id/ghostedProb"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/ghostedFeat"
+        android:textColor="@color/teal_700"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toRightOf="@id/emojiOneLeft"
+        app:layout_constraintRight_toLeftOf="@id/emojiFiveLeft"
+        app:layout_constraintTop_toBottomOf="@+id/ghostedLine"
+        app:layout_constraintBottom_toTopOf="@+id/ghostedLineBottom"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/inquisitiveLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.18" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/inquisitiveLineBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.23" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/inquisitiveEmojiBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.31" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/interestLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.43" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/interestLineBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.48" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/interestEmojiBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.56" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/ghostedLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.64" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/ghostedLineBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.69" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/ghostedEmojiBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.77" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/bottom_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.88" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/emojiRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/emojiRightTwo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.8" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/emojiLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.05" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/emojiLeftTwo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.2" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/emojiOneLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.22" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/emojiTwoLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.36" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/emojiThreeLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/emojiFourLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.64" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/emojiFiveLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.78" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
