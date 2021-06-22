@@ -48,20 +48,35 @@ def hello():
 def getMessages(imageArray, orig, cutoffMargin, inwardMargin, rightwardMargin):
     # Find X,Y coordinates of all user pixels
     userY, userX = np.where(np.all(imageArray==[33,185,252],axis=2))
-    if len(userX)==0:
-        return []   
-    userLeft = min(userX)
-    userRight = max(userX)
 
     matchY, matchX = np.where(np.all(imageArray==[229,229,229],axis=2))
-    matchLeft = min(matchX)
-    matchRight = max(matchX)
+    if len(userX)==0 and len(matchX)==0:
+        return []   
+    elif len(userX)==0:
+        matchLeft = min(matchX)
+        matchRight = max(matchX)
+        userX = [0]
+        userY = [0]
+        userLeft = 0
+        userRight = 0
+    elif len(matchX)==0:
+        userLeft = min(userX)
+        userRight = max(userX)
+        matchX = [0]
+        matchY = [0]
+        matchLeft = 0
+        matchRight = 0
+    else:
+        matchLeft = min(matchX)
+        matchRight = max(matchX)
+        userLeft = min(userX)
+        userRight = max(userX)
 
     absoluteBottom = max(len(userY),len(matchY))
     conversation = []
     
-    top = userY[0]
-    bottom = userY[0]
+    top = max(userY[0], matchY[0])
+    bottom = min(userY[0], matchY[0])
     userInd = 0
     matchInd = 0
     visionClient = vision.ImageAnnotatorClient()

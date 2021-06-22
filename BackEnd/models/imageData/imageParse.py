@@ -7,8 +7,8 @@ from PIL import Image, ImageFilter, ImageOps
 from expertai.nlapi.cloud.client import ExpertAiClient
 
 # Set Expert AI variables
-os.environ['EAI_USERNAME'] = ''
-os.environ['EAI_PASSWORD'] = ''
+os.environ['EAI_USERNAME'] = 'rufus.behr@gmail.com'
+os.environ['EAI_PASSWORD'] = 'M39jfdasfla4$'
 
 TaxonomyFeatures = ["Anger", "Irritation", "Exasperation", "Anxiety","Fear","Stress","Worry","Disgust","Repulsion","Guilt","Shame","Embarrassment","Regret","Boredom", "Hatred", "Offence", "Jealousy", "Envy","Sadness","Torment","Suffering","Disappointment","Disillusion", "Resignation", "Surprise","Happiness","Excitement","Joy","Amusement","Well-Being","Satisfaction","Relief","Like","Trust","Affection","Love","Passion","Empathy","Compassion","Asociality","Impoliteness","Ungratefulness","Emotionality","Isolation","Disagreement","Seriousness","Introversion","Unreservedness","Humour","Sexuality","Extroversion","Pleasantness","Trustfulness","Gratefulness","Empathy","Sedentariness","Passivity","Calmness","Initiative","Dynamism","Rejection","Apathy","Apprehension","Traditionalism","Conformism","Negativity","Bias","Cautiousness","Progressiveness","Acceptance","Courage","Positivity","Curiosity","Superficiality","Unawareness","Disorganization","Insecurity","Ignorance","Illusion","Awareness","Spirituality","Concern","Knowledge","Self-confidence","Organization","Violence","Extremism","Discrimination","Dishonesty","Neglect","Unlawfulness","Irresponsibility","Honesty","Compassion","Commitment","Lawfulness","Solidarity","Inclusiveness","Lack of intelligence","Inexperience","Incompetence","Rationality","Smartness","Creativity","Competence","Dissoluteness","Gluttony","Materialism","Addiction","Healthy lifestyle","Self-restraint"]
 
@@ -39,8 +39,6 @@ class Message:
 def getMessages(imageArray, orig, cutoffMargin, inwardMargin, rightwardMargin):
     # Find X,Y coordinates of all user pixels
     userY, userX = np.where(np.all(imageArray==[33,185,252],axis=2))
-    userLeft = min(userX)
-    userRight = max(userX)
 
     matchY, matchX = np.where(np.all(imageArray==[229,229,229],axis=2))
     if len(userX)==0 and len(matchX)==0:
@@ -48,11 +46,15 @@ def getMessages(imageArray, orig, cutoffMargin, inwardMargin, rightwardMargin):
     elif len(userX)==0:
         matchLeft = min(matchX)
         matchRight = max(matchX)
+        userX = [0]
+        userY = [0]
         userLeft = 0
         userRight = 0
     elif len(matchX)==0:
         userLeft = min(userX)
         userRight = max(userX)
+        matchX = [0]
+        matchY = [0]
         matchLeft = 0
         matchRight = 0
     else:
@@ -64,8 +66,8 @@ def getMessages(imageArray, orig, cutoffMargin, inwardMargin, rightwardMargin):
     absoluteBottom = max(len(userY),len(matchY))
     conversation = []
     
-    top = userY[0]
-    bottom = userY[0]
+    top = max(userY[0], matchY[0])
+    bottom = min(userY[0], matchY[0])
     userInd = 0
     matchInd = 0
     visionClient = vision.ImageAnnotatorClient()
@@ -228,4 +230,5 @@ def createVocabList():
         for word in words:
             f.write(word+"\n")
 
-createVocabList()
+#createVocabList()
+createTrainingData()
