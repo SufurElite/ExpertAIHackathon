@@ -58,33 +58,6 @@ def train(X, y):
     model.save_weights("model_files/ghostModel.h5")
     print("Saved model to disk")
 
-def loadModel():
-    # load json and create model
-    json_file = open('model_files/ghostModel.json', 'r')
-    loaded_model_json = json_file.read()
-    json_file.close()
-    loaded_model = model_from_json(loaded_model_json)
-    # load weights into new model
-    loaded_model.load_weights("model_files/ghostModel.h5")
-    print("Loaded model from disk")
-    loaded_model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-    return loaded_model
-
-def predict():
-    """ Testing the Prediction of the Models """
-    loaded_model = loadModel()
-    with open("imageData/data.json", "r") as f:
-        data = json.load(f)
-    X = data["X"]
-    y = data["y"]
-    X = X[100]
-    print(y[100])
-    X = np.asarray(X)
-    X = X.reshape(1, 114)
-    print(loaded_model.predict_proba(X))
-    
-
 if __name__=="__main__":
-    #X, y = getData()
-    #train(X, y)
-    predict()
+    X, y = getData()
+    train(X, y)

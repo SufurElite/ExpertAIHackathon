@@ -5,50 +5,108 @@ import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
+from keras.preprocessing.text import Tokenizer
+from sklearn.linear_model import LogisticRegression
+from keras.preprocessing.sequence import pad_sequences
+
 from keras.models import Sequential
+from keras import layers
 from keras.layers import Dense, Embedding, LSTM
 from sklearn.model_selection import train_test_split
 from keras.utils.np_utils import to_categorical
 import re
 import json
 import pandas as pd
+import pickle 
 
-#Converting into pandas dataframe and filtering only text and ratings given by the users
-df = pd.read_json("data/inquisitive.json")
-data = df[['X', 'y']]
+maxlen = 400
+embedding_dim = 100
 
-data['X'] = data['X'].apply(lambda x: x.lower())
-data['X'] = data['X'].apply((lambda x: re.sub('[^a-zA-z0-9\s]','',x)))
+def create_embedding_matrix(filepath, word_index, embedding_dim):
+    """ If I have time to use glove word embeddings """
+    vocab_size = len(word_index) + 1  # Adding again 1 because of reserved 0 index
+    embedding_matrix = np.zeros((vocab_size, embedding_dim))
 
-tokenizer = Tokenizer(num_words = 2500, split=' ')
+    with open(filepath) as f:
+        for line in f:
+            word, *vector = line.split()
+            if word in word_index:
+                idx = word_index[word] 
+                embedding_matrix[idx] = np.array(
+                    vector, dtype=np.float32)[:embedding_dim]
 
-tokenizer.fit_on_texts(data['X'].values)
-#print(tokenizer.word_index)  # To see the dicstionary
-X = tokenizer.texts_to_sequences(data['X'].values)
-X = pad_sequences(X)
+    return embedding_matrix
 
-embed_dim = 128
-lstm_out = 300
-batch_size= 32
+def get_data():
+    df = pd.read_json("humanEvalData/inquisitive.json")
+    data = df[['X', 'y']]    
+    sentences = data["X"].values 
+    y = to_categorical(data["y"].values)
+    sentences_train, sentences_test, y_train, y_test = train_test_split(sentences, y, test_size=0.15, random_state=42)
+    tokenizer = load_tokenizer()
+    vocab_size = len(tokenizer.word_index) + 1
+    X_train = tokenizer.texts_to_sequences(sentences_train)
+    X_test = tokenizer.texts_to_sequences(sentences_test)
+    sentences = tokenizer.texts_to_sequences(sentences)
 
-##Buidling the LSTM network
+    X_train = pad_sequences(X_train, padding='post', maxlen=maxlen)
+    X_test = pad_sequences(X_test, padding='post', maxlen=maxlen)
+    sentences = pad_sequences(sentences,padding='post',maxlen=maxlen)
+    return sentences, y, X_train, X_test, y_train, y_test, vocab_size
 
-model = Sequential()
-model.add(Embedding(2500, embed_dim,input_length = X.shape[1], dropout=0.1))
-model.add(LSTM(300, dropout=0.1, recurrent_dropout=0.1))
-model.add(Dense(4,activation='softmax'))
-model.compile(loss = 'categorical_crossentropy', optimizer='adam',metrics = ['accuracy'])
+def build_model(vocab_size):
+    model = Sequential()
+    model.add(layers.Embedding(vocab_size, embedding_dim, input_length=maxlen))
+    model.add(layers.Conv1D(128, 5, activation='relu'))
+    model.add(layers.GlobalMaxPooling1D())
+    model.add(layers.Dense(50, activation='relu'))
+    model.add(layers.Dense(4, activation='sigmoid'))
+    model.compile(optimizer='adam',
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
+    return model
 
-y = data['y'].values
-from keras.utils import to_categorical
-y_binary = to_categorical(y)
-X_train, X_valid, Y_train, Y_valid = train_test_split(X,y_binary, test_size = 0.20, random_state = 42)
-#Here we train the Network.
-input(X_train[0])
-model.fit(X_train, Y_train, batch_size =batch_size, epochs = 1,  verbose = 5)
+def save_tokenizer():
+    # Create and ave the Tokenizer
+    df = pd.read_json("humanEvalData/inquisitive.json")
+    vals = list(df["X"].values)
+    with open("imageData/vocab.txt","r") as f:
+        vocab = f.read().split("\n")
+        del vocab[len(vocab)-1]
+    vals+=vocab
+    tokenizer = Tokenizer(num_words=5000)
+    tokenizer.fit_on_texts(vals)
+    vocab_size = len(tokenizer.word_index) + 1
+    with open("tokenizer.pkl","wb") as f:
+        pickle.dump(tokenizer,f)
 
-# Measuring score and accuracy on validation set
+def load_tokenizer():
+    with open("tokenizer.pkl","rb") as f:        
+        tokenizer = pickle.load(f)
+    return tokenizer
 
-score,acc = model.evaluate(X_valid, Y_valid, verbose = 2, batch_size = batch_size)
-print("Logloss score: %.2f" % (score))
-print("Validation set Accuracy: %.2f" % (acc))
+def save_model(model):
+    model_json = model.to_json()
+    with open("model_files/inquisitiveModel.json", "w+") as json_file:
+        json_file.write(model_json)
+    # serialize weights to HDF5
+    model.save_weights("model_files/inquisitiveModel.h5")
+    print("Saved model to disk")
+
+def main():
+    X_total, y, X_train, X_test, y_train, y_test, vocab_size = get_data()
+    model = build_model(vocab_size)
+    print("Vocab Size: " + str(vocab_size))
+    model.fit(X_train, y_train,
+                    epochs=10,
+                    verbose=True,
+                    validation_data=(X_test, y_test),
+                    batch_size=10)
+    loss, accuracy = model.evaluate(X_train, y_train, verbose=True)
+    print("Training Accuracy: {:.4f}".format(accuracy))
+    loss, accuracy = model.evaluate(X_test, y_test, verbose=True)
+    print("Testing Accuracy:  {:.4f}".format(accuracy))
+    #save_model(model)
+
+if __name__=="__main__":
+    main()

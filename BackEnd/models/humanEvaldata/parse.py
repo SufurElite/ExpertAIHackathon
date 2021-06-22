@@ -1,6 +1,6 @@
 import json, sys
 
-def createTrainingData(y_characteristic):
+def createTrainingDate(y_characteristic):
     """ Creates the training data for a particular characteristic - options are for the human evaluation, 
     such as inquisitive, avoid_rep, & listen 
     Discovered only inquisitive and interest had decent variation
@@ -28,7 +28,21 @@ def createTrainingData(y_characteristic):
     newData["y"] = y
     with open(y_characteristic+".json", "w+") as f:
         json.dump(newData, f)
-        
+
+def createVocabList():
+    text = ""
+    with open("human_eval.jsonl") as f:
+        lines = f.read().split("\n")
+        del lines[len(lines)-1]
+        for line in lines: 
+            cur = json.loads(line)
+            for j in cur["dialog"]:
+                text+=j["text"].lower()+" "
+    words = totalText.split(" ")
+    with open("vocab.txt","w+") as f:
+        for word in words:
+            f.write(word)
+
 if __name__ == '__main__':
     arg = sys.argv[1]
-    createTrainingData(arg)
+    createTrainingDate(arg)

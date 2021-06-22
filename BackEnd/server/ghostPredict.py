@@ -17,10 +17,12 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 import numpy as np
 
+# Set Expert AI Ennv variables
+"""os.environ['EAI_USERNAME'] = ''
+os.environ['EAI_PASSWORD'] = ''"""
+
 def getFeatures(totalText, numMessages):
-    # Set Expert AI Ennv variables
-    os.environ['EAI_USERNAME'] = ''
-    os.environ['EAI_PASSWORD'] = ''
+    
 
     TaxonomyFeatures = ["Anger", "Irritation", "Exasperation", "Anxiety","Fear","Stress","Worry","Disgust","Repulsion","Guilt","Shame","Embarrassment","Regret","Boredom", "Hatred", "Offence", "Jealousy", "Envy","Sadness","Torment","Suffering","Disappointment","Disillusion", "Resignation", "Surprise","Happiness","Excitement","Joy","Amusement","Well-Being","Satisfaction","Relief","Like","Trust","Affection","Love","Passion","Empathy","Compassion","Asociality","Impoliteness","Ungratefulness","Emotionality","Isolation","Disagreement","Seriousness","Introversion","Unreservedness","Humour","Sexuality","Extroversion","Pleasantness","Trustfulness","Gratefulness","Empathy","Sedentariness","Passivity","Calmness","Initiative","Dynamism","Rejection","Apathy","Apprehension","Traditionalism","Conformism","Negativity","Bias","Cautiousness","Progressiveness","Acceptance","Courage","Positivity","Curiosity","Superficiality","Unawareness","Disorganization","Insecurity","Ignorance","Illusion","Awareness","Spirituality","Concern","Knowledge","Self-confidence","Organization","Violence","Extremism","Discrimination","Dishonesty","Neglect","Unlawfulness","Irresponsibility","Honesty","Compassion","Commitment","Lawfulness","Solidarity","Inclusiveness","Lack of intelligence","Inexperience","Incompetence","Rationality","Smartness","Creativity","Competence","Dissoluteness","Gluttony","Materialism","Addiction","Healthy lifestyle","Self-restraint"]
     
@@ -87,9 +89,21 @@ def loadModelLocal():
     loaded_model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
     return loaded_model
 
+def loadOnlyLocal():
+    # load json and create model
+    json_file = open('model_files/ghostModel.json', 'r')
+    loaded_model_json = json_file.read()
+    json_file.close()
+    loaded_model = model_from_json(loaded_model_json)
+    # load weights into new model
+    loaded_model.load_weights("model_files/ghostModel.h5")
+    print("Loaded model from disk")
+    loaded_model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+    return loaded_model
+
 def predict(totalText, numMessages):
     x = np.asarray(getFeatures(totalText, numMessages))
-    loaded_model = loadModel()
+    loaded_model = loadOnlyLocal()
     x = x.reshape(1, 114)
     return round(loaded_model.predict_proba(x)[0][0]*4)
     

@@ -15,6 +15,7 @@ Here are links I found useful to code &amp; tutorials for the BackEnd.
 1. https://medium.com/analytics-vidhya/encoder-decoder-seq2seq-models-clearly-explained-c34186fbf49b
 2. https://machinelearningmastery.com/sequence-prediction/
 3. https://towardsdatascience.com/how-to-implement-seq2seq-lstm-model-in-keras-shortcutnlp-6f355f3e5639
+4. https://realpython.com/python-keras-text-classification/
 #### Human Evaluated Data From Facebook
 * Paper: https://arxiv.org/abs/1902.08654
 * Code: https://github.com/facebookresearch/ParlAI/tree/controllable_dialogue_archive/projects/controllable_dialogue

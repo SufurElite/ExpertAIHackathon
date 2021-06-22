@@ -5,6 +5,8 @@ from google.cloud import vision
 from google.cloud import storage
 import numpy as np
 import ghostPredict
+import interestPredict
+import inquisitivePredict
 from PIL import Image, ImageFilter, ImageOps
 from expertai.nlapi.cloud.client import ExpertAiClient
 
@@ -12,9 +14,8 @@ from expertai.nlapi.cloud.client import ExpertAiClient
 # called `app` in `main.py`.
 app = Flask(__name__)
 # Set environment variables
-os.environ['EAI_USERNAME'] = ''
-os.environ['EAI_PASSWORD'] = ''
-
+"""os.environ['EAI_USERNAME'] = ''
+os.environ['EAI_PASSWORD'] = ''"""
 class Message:
     def __init__(self, top, bottom, left, right, isUser, text, overallSentiment, positiveSentiment, negativeSentiment):
        self.top = top
@@ -167,15 +168,18 @@ def loadImageText(path):
     if len(L)==0:
         return ""
     for i in L:
-        if i.isUser:
+        """if i.isUser:
             res+="User : " + i.getText()+"<br/>"
         else:
             res+="Match : " + i.getText()+"<br/>"
+        """
         totalText+=i.getText() + ". "
+    res+=str(interestPredict.predict(totalText))
+    res+=str(inquisitivePredict.predict(totalText))
     ghostedLikelihood = ghostPredict.predict(totalText,len(L))
     if ghostedLikelihood == 0:
         ghostedLikelihood+=1
-    res+="Likelihood of getting ghosted : " + str(ghostedLikelihood) + "<br/>"
+    res+=str(ghostedLikelihood)
     return res
 
 # GET

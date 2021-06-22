@@ -156,6 +156,24 @@ def getFeatures(fpath):
     x[len(TaxonomyFeatures)+2] = len(totalText)/len(L)
     return x
 
+def getText(fpath):
+    print("Getting Solely Text for ", fpath)
+    im = Image.open(fpath).convert('RGB')
+    na = np.array(im)
+    orig = na.copy()    # Save original
+    imageWidth = im.size[0]
+    imageHeight = im.size[1]
+    cutoffMargin = .02*imageHeight
+    inwardMargin = int(.12*imageWidth)
+    rightwardMargin = int(.07*imageWidth)
+    L = getMessages(na, orig, cutoffMargin, inwardMargin, rightwardMargin)     
+    totalText = ""
+    if len(L)==0:
+        return ""
+    for i in L:
+        totalText+=i.getText().replace("\n"," ").replace("?", " ").replace("."," ").replace(","," ").strip()+" "
+    return totalText
+
 def createTrainingData():
     X_data = []
     y = []
@@ -178,5 +196,23 @@ def createTrainingData():
         json.dump(data, f)
     print(X_data)
     print(y)
-        
-createTrainingData()
+
+def createVocabList():
+    X_data = []
+    y = []
+    newData = {}
+    num = 1
+    text = ""
+    for subdir, dirs, files in os.walk(os.getcwd()):
+        for file in files:
+            fpath = os.path.join(subdir, file)
+            if(fpath[-3:]=="png"):
+                print(num)
+                text+=getText(fpath)+" "
+                num+=1
+    words = text.strip().split(" ")
+    with open("vocab.txt","w+") as f:
+        for word in words:
+            f.write(word+"\n")
+
+createVocabList()
