@@ -14,7 +14,8 @@
     <string name="ghostedFeat">Likelihood of being Ghosted</string>
 
     <string name="inputMessage">Input A Potential Next Message</string>
-
+    <string name="welcome">Welcome to Chadvice!</string>
+    <string name="centerWelcome"> To begin receiving insights into your tinder conversations, just tap the Launch Ai button, open your conversation of each choice, and press on our chathead! </string>
     <string name="minimise">minimise</string>
     <string name="dummy_email">tmp@tmp.com</string>
     <string name="action_settings">Settings</string>

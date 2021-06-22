@@ -5,18 +5,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="361dp"
+        android:layout_height="168dp"
+        android:layout_marginTop="41dp"
+        android:contentDescription="@string/logoContentDesc"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/facebook_cover_photo_background"
+        tools:srcCompat="@drawable/facebook_cover_photo_background" />
 
     <TextView
-        android:id="@+id/text1"
+        android:id="@+id/welcomeTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:text="@string/welcome"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.373" />
 
-        <Button
+    <Button
             android:id="@+id/createChatHead"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -26,7 +40,7 @@
             app:layout_constraintBottom_toTopOf="@+id/bottom_guideline"
             app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
             app:layout_constraintRight_toRightOf="@+id/right_guideline"/>
-    <!-- This button will be used to test the communication between my app and server -->
+    <!-- This button will be used to test the communication between my app and server
     <Button
         android:id="@+id/postFromServer"
         android:layout_width="wrap_content"
@@ -48,7 +62,7 @@
         app:layout_constraintBottom_toTopOf="@+id/createChatHead"
         app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
         app:layout_constraintRight_toRightOf="@+id/right_guideline"/>
-
+-->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/bottom_guideline"
         android:layout_width="wrap_content"
@@ -122,5 +136,17 @@
         android:text="@string/dummy_email"
         app:layout_constraintTop_toBottomOf="@+id/third_top"
         app:layout_constraintLeft_toRightOf="@+id/second_right" />
+
+    <TextView
+        android:id="@+id/centeralText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/centerWelcome"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toRightOf="@id/left_guideline"
+        app:layout_constraintRight_toLeftOf="@id/right_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/welcomeTitle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
