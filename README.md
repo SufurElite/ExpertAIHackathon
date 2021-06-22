@@ -7,7 +7,7 @@ As any college-aged individual will attest, for better or worse, dating apps are
 ## How I built it
 
 ### Overview
-I built the Front-End for the Android Application in Java and the back-end in python. The app uses media projection to record the screen and programmatically take a screenshot, which using retrofit2 is sent to the back-end. The backend is hosted on Google App Engine and the user authentication is done through Firebase. Once the screenshot has been sent to the backend, it splits the image into just the text messages in the correct order and uses google-cloud-vision to apply ocr to the images. The machine learning models are applied to the conversations and the values are returned to the user, so they have insight into their conversation.
+I built the Front-End for the Android Application in Java and the back-end in python. The app uses media projection to record the screen and programmatically take a screenshot, which using retrofit2 is sent to the back-end. The backend can be hosted on either Google App Engine or locally, and the user authentication is done through Firebase. Once the screenshot has been sent to the backend, it splits the image into just the text messages in the correct order and uses google-cloud-vision to apply ocr to the images. The machine learning models are applied to the conversations and the values are returned to the user, so they have insight into their conversation.
 
 ### Models
 When determining how to approach the problem of giving advice/insight on dating converations (or really conversatios at large), I discovered various research papers on the evaluation of Chatbots. The two most influential in my approaches are Facebook AI Research's _ What makes a good conversation _ and Zurich University's _ Towards a Metric for Automated COnversational Dialogue System Evaluation and Improvement _ (See github for these and other useful papers). 
@@ -21,12 +21,13 @@ Consequently, there were two primary datasets that I used for this project: Face
 ## Challenges I ran into
 * I had difficulty with the media projection on Android. (also not being able to have media projection twice made recording the phone screen for the demo harder)
 * My Android Emulator has continually refused to co-operate with me (I suspect because of a clashing Cordova android installation). 
+* App Engine started having difficulties once Tensorflow was being ran on the back-end.
 
 ## Accomplishments that I'm proud of
-While this is still a proof of concept, I developed an app from start to a publishable state that isn't dependent on running locally on a machine (i.e. the backend is deployed and works smoothly with the Front-End). Also, it has been almost 4 years since I have done any extensive Java development and all my prior Android App Development has been through web wrappers.   
+While this is still a proof of concept, it's very gratifying to develop an app from start to a finish. Also, it has been almost 4 years since I have done any extensive Java development and all my prior Android App Development has been through web wrappers.   
 
 ## What I learned
-Don't start a conversation "hey", but, whilst that's true, on a more serious note I did learn a lot about App Development.
+Don't start a conversation "hey", but, while that's true, on a more serious note I did learn a lot about App Development.
 
 ## What's next for Chadvice
 * Add more analysis (currently only three aspects of conversation) and perhaps more targeted dating aspects to conversation (e.g. striking the right balance of flirting vs just talking)

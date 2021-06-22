@@ -20,6 +20,7 @@ Here are links I found useful to code &amp; tutorials for the BackEnd.
 * Code: https://github.com/facebookresearch/ParlAI/tree/controllable_dialogue_archive/projects/controllable_dialogue
 
 # To-Do : 
+* Need to fix: App Engine started to have issues once I ran tensorflow on it - had to revert back to running the sever locally. 
 * Get more human data evaluating conversation attributes to better fine-tune the predictions
 * Maybe explore more important factors for communicating with people on tinder (e.g. for a chatbot inquisitiveness and listening is quite useful, but perhaps for tinder there are more pertinent conversation aspects - such as the balance of flirting and outright crude comments)
 * Acquire more data from tinder conversations and their result to fine-tune binary ghosted model

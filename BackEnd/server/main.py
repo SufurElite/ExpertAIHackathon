@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 from google.cloud import vision
 from google.cloud import storage
 import numpy as np
+import ghostPredict
 from PIL import Image, ImageFilter, ImageOps
 from expertai.nlapi.cloud.client import ExpertAiClient
 
@@ -46,6 +47,8 @@ def hello():
 def getMessages(imageArray, orig, cutoffMargin, inwardMargin, rightwardMargin):
     # Find X,Y coordinates of all user pixels
     userY, userX = np.where(np.all(imageArray==[33,185,252],axis=2))
+    if len(userX)==0:
+        return []   
     userLeft = min(userX)
     userRight = max(userX)
 
@@ -61,10 +64,7 @@ def getMessages(imageArray, orig, cutoffMargin, inwardMargin, rightwardMargin):
     userInd = 0
     matchInd = 0
     visionClient = vision.ImageAnnotatorClient()
-    aiClient = ExpertAiClient()
-
-    language= 'en'
-
+    
     while userInd+1<absoluteBottom or matchInd+1<absoluteBottom:
         if matchInd<len(matchY)-1 and userInd<len(userY)-1:
             #print(matchInd, userInd)
@@ -124,23 +124,8 @@ def getMessages(imageArray, orig, cutoffMargin, inwardMargin, rightwardMargin):
 
             response = visionClient.document_text_detection(image=image)
             text = response.full_text_annotation.text
-            output = aiClient.specific_resource_analysis(
-                body={"document": {"text": text}}, 
-                params={'language': language, 'resource': 'sentiment'
-            })
-            """
-            taxonomy2 = 'behavioral-traits'
-            taxonomy = 'emotional-traits'
-            language= 'en'
-
-            output = client.classification(body={"document": {"text": text}}, params={'taxonomy': taxonomy, 'language': language})
-
-            print("Tab separated list of categories:")
-
-            for category in output.categories:
-                print(category.id_, category.hierarchy, sep="\t")
-            """
-            conversation.append(Message(top, bottom, left, right, isUser, text, output.sentiment.overall, output.sentiment.positivity, output.sentiment.negativity))
+            
+            conversation.append(Message(top, bottom, left, right, isUser, text, 0, 0, 0))
     return conversation
 
 @app.route('/getImageText/<path>')
@@ -178,31 +163,19 @@ def loadImageText(path):
     rightwardMargin = int(.07*imageWidth)
     L = getMessages(na, orig, cutoffMargin, inwardMargin, rightwardMargin)     
     res = ""
-    sentiment = 0
     totalText = ""
+    if len(L)==0:
+        return ""
     for i in L:
         if i.isUser:
-            res+="User : " + i.getText()+"| " + i.getSentimentAsText()+"<br/>"
+            res+="User : " + i.getText()+"<br/>"
         else:
-            res+="Match : " + i.getText()+"| " + i.getSentimentAsText()+"<br/>"
+            res+="Match : " + i.getText()+"<br/>"
         totalText+=i.getText() + ". "
-        sentiment+=i.getOverallSentiment()
-    res+="<br/>Overall Sentiment By Message: " + str(sentiment)
-    aiClient = ExpertAiClient()
-    output = aiClient.specific_resource_analysis(
-                body={"document": {"text": totalText}}, 
-                params={'language': "en", 'resource': 'sentiment'
-    })
-    res+="<br/> Overall sentiment by totality: " + str(output.sentiment.overall)
-
-    output = aiClient.classification(body={"document": {"text": totalText}}, params={'taxonomy': "behavioral-traits", 'language': "en"})
-    res+="<br/> number of behavioral traits: " + str(len(output.categories))
-    for category in output.categories:
-        res+= "<br/>" + '\t'.join(category.hierarchy)
-    output = aiClient.classification(body={"document": {"text": totalText}}, params={'taxonomy': "emotional-traits", 'language': "en"})
-    res+="<br/> number of emotional traits: " + str(len(output.categories))
-    for category in output.categories:
-        res+= "<br/>" + '\t'.join(category.hierarchy)
+    ghostedLikelihood = ghostPredict.predict(totalText,len(L))
+    if ghostedLikelihood == 0:
+        ghostedLikelihood+=1
+    res+="Likelihood of getting ghosted : " + str(ghostedLikelihood) + "<br/>"
     return res
 
 # GET
@@ -213,9 +186,12 @@ def hello_user(user):
     """
     return "Hello %s!" % user
 
+@app.errorhandler(500)
+def internal_server_error(e):
+    return jsonify(error=str(e)), 500
 
 if __name__ == '__main__':
     # This is used when running locally only. When deploying to Google App
     # Engine, a webserver process such as Gunicorn will serve the app. This
     # can be configured by adding an `entrypoint` to app.yaml.
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host='0.0.0.0', port=8080, debug=True)
