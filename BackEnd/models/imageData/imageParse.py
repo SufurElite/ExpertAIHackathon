@@ -7,8 +7,8 @@ from PIL import Image, ImageFilter, ImageOps
 from expertai.nlapi.cloud.client import ExpertAiClient
 
 # Set Expert AI variables
-os.environ['EAI_USERNAME'] = 'rufus.behr@gmail.com'
-os.environ['EAI_PASSWORD'] = 'M39jfdasfla4$'
+os.environ['EAI_USERNAME'] = ''
+os.environ['EAI_PASSWORD'] = ''
 
 TaxonomyFeatures = ["Anger", "Irritation", "Exasperation", "Anxiety","Fear","Stress","Worry","Disgust","Repulsion","Guilt","Shame","Embarrassment","Regret","Boredom", "Hatred", "Offence", "Jealousy", "Envy","Sadness","Torment","Suffering","Disappointment","Disillusion", "Resignation", "Surprise","Happiness","Excitement","Joy","Amusement","Well-Being","Satisfaction","Relief","Like","Trust","Affection","Love","Passion","Empathy","Compassion","Asociality","Impoliteness","Ungratefulness","Emotionality","Isolation","Disagreement","Seriousness","Introversion","Unreservedness","Humour","Sexuality","Extroversion","Pleasantness","Trustfulness","Gratefulness","Empathy","Sedentariness","Passivity","Calmness","Initiative","Dynamism","Rejection","Apathy","Apprehension","Traditionalism","Conformism","Negativity","Bias","Cautiousness","Progressiveness","Acceptance","Courage","Positivity","Curiosity","Superficiality","Unawareness","Disorganization","Insecurity","Ignorance","Illusion","Awareness","Spirituality","Concern","Knowledge","Self-confidence","Organization","Violence","Extremism","Discrimination","Dishonesty","Neglect","Unlawfulness","Irresponsibility","Honesty","Compassion","Commitment","Lawfulness","Solidarity","Inclusiveness","Lack of intelligence","Inexperience","Incompetence","Rationality","Smartness","Creativity","Competence","Dissoluteness","Gluttony","Materialism","Addiction","Healthy lifestyle","Self-restraint"]
 
