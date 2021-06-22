@@ -16,6 +16,7 @@ app = Flask(__name__)
 # Set environment variables
 """os.environ['EAI_USERNAME'] = ''
 os.environ['EAI_PASSWORD'] = ''"""
+
 class Message:
     def __init__(self, top, bottom, left, right, isUser, text, overallSentiment, positiveSentiment, negativeSentiment):
        self.top = top
@@ -180,6 +181,7 @@ def loadImageText(path):
     L = getMessages(na, orig, cutoffMargin, inwardMargin, rightwardMargin)     
     res = ""
     totalText = ""
+    print(str(blob.name)+ " : " + str(len(L)))
     if len(L)==0:
         return ""
     for i in L:
@@ -189,6 +191,62 @@ def loadImageText(path):
             res+="Match : " + i.getText()+"<br/>"
         """
         totalText+=i.getText() + ". "
+    res+=str(interestPredict.predict(totalText))
+    res+=str(inquisitivePredict.predict(totalText))
+    ghostedLikelihood = ghostPredict.predict(totalText,len(L))
+    if ghostedLikelihood == 0:
+        ghostedLikelihood+=1
+    res+=str(ghostedLikelihood)
+    return res
+
+@app.route('/potentialMessage/<path>/<msg>')
+def potentialMessage(path,msg):
+    gcs_source_uri = "gs://chadvice.appspot.com/images/"+path
+    msg = msg.replace("%20"," ")
+    print(msg)
+    storage_client = storage.Client()
+    
+    match = re.match(r'gs://([^/]+)/(.+)', gcs_source_uri)
+    bucket_name = match.group(1)
+    prefix = match.group(2)
+    print("bucket_name : ",bucket_name)
+    print("prefix : ",prefix)
+    bucket = storage_client.get_bucket(bucket_name)
+    # List objects with the given prefix.
+    blob_list = list(bucket.list_blobs(prefix=prefix))
+    
+    print('Output files:')
+    files = []
+    for blob in blob_list:
+        files.append(blob)
+    blob = files[0]
+    print(blob.name) 
+    print("downloading picture")
+    blobString = blob.download_as_string()
+    blobBytes = io.BytesIO(blobString)
+    im = Image.open(blobBytes)
+    im = Image.open(blobBytes).convert('RGB')
+    na = np.array(im)
+    orig = na.copy()    # Save original
+    imageWidth = im.size[0]
+    imageHeight = im.size[1]
+    cutoffMargin = .02*imageHeight
+    inwardMargin = int(.12*imageWidth)
+    rightwardMargin = int(.07*imageWidth)
+    L = getMessages(na, orig, cutoffMargin, inwardMargin, rightwardMargin)     
+    res = ""
+    totalText = ""
+    print(str(blob.name)+ " : " + str(len(L)))
+    if len(L)==0:
+        return ""
+    for i in L:
+        """if i.isUser:
+            res+="User : " + i.getText()+"<br/>"
+        else:
+            res+="Match : " + i.getText()+"<br/>"
+        """
+        totalText+=i.getText() + ". "
+    totalText+=msg + ". "
     res+=str(interestPredict.predict(totalText))
     res+=str(inquisitivePredict.predict(totalText))
     ghostedLikelihood = ghostPredict.predict(totalText,len(L))
