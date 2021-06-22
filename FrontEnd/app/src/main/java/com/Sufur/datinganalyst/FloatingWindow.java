@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -22,7 +23,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import com.Sufur.datinganalyst.Common;
 
@@ -38,6 +43,7 @@ public class FloatingWindow extends Service {
     private Button closeBtn;
     private EditText inputArea;
     private Button saveBtn;
+    private ApiInterface apiInterface;
     // As FloatingWindowGFG inherits Service class,
     // it actually overrides the onBind method
     @Nullable
@@ -71,45 +77,7 @@ public class FloatingWindow extends Service {
         inputArea = floatView.findViewById(R.id.inputText);
         saveBtn = floatView.findViewById(R.id.saveBtn);
 
-        // Set inquisitive images
-        ImageView imageView = floatView.findViewById(R.id.inquisitiveMin);
-        imageView.setImageResource(R.drawable.ic_mouthshut);
-        imageView = floatView.findViewById(R.id.inquisitiveEmojiOne);
-        imageView.setImageResource(R.drawable.ic_redcircle);
-        imageView = floatView.findViewById(R.id.inquisitiveEmojiTwo);
-        imageView.setImageResource(R.drawable.ic_yellowcircle);
-        imageView = floatView.findViewById(R.id.inquisitiveEmojiThree);
-        imageView.setImageResource(R.drawable.ic_yellowcircle);
-        imageView = floatView.findViewById(R.id.inquisitiveEmojiFour);
-        imageView.setImageResource(R.drawable.ic_greencircle);
-        imageView = floatView.findViewById(R.id.inquisitiveMax);
-        imageView.setImageResource(R.drawable.ic_think);
-
-        imageView = floatView.findViewById(R.id.interestingMin);
-        imageView.setImageResource(R.drawable.ic_sleep);
-        imageView = floatView.findViewById(R.id.interestingEmojiOne);
-        imageView.setImageResource(R.drawable.ic_redcircle);
-        imageView = floatView.findViewById(R.id.interestingEmojiTwo);
-        imageView.setImageResource(R.drawable.ic_yellowcircle);
-        imageView = floatView.findViewById(R.id.interestingEmojiThree);
-        imageView.setImageResource(R.drawable.ic_yellowcircle);
-        imageView = floatView.findViewById(R.id.interestingEmojiFour);
-        imageView.setImageResource(R.drawable.ic_greencircle);
-        imageView = floatView.findViewById(R.id.interestingMax);
-        imageView.setImageResource(R.drawable.ic_stareyes);
-
-        imageView = floatView.findViewById(R.id.ghostedEmojiMin);
-        imageView.setImageResource(R.drawable.ic_ghosted);
-        imageView = floatView.findViewById(R.id.ghostedEmojiOne);
-        imageView.setImageResource(R.drawable.ic_redcircle);
-        imageView = floatView.findViewById(R.id.ghostedEmojiTwo);
-        imageView.setImageResource(R.drawable.ic_yellowcircle);
-        imageView = floatView.findViewById(R.id.ghostedEmojiThree);
-        imageView.setImageResource(R.drawable.ic_yellowcircle);
-        imageView = floatView.findViewById(R.id.ghostedEmojiFour);
-        imageView.setImageResource(R.drawable.ic_greencircle);
-        imageView = floatView.findViewById(R.id.ghostedEmojiMax);
-        imageView.setImageResource(R.drawable.ic_coolglasses);
+        updateStats();
 
         // Just like MainActivity, the text written
         // in Maximized will stay
@@ -299,10 +267,133 @@ public class FloatingWindow extends Service {
                 // The soft keyboard slides back in
                 inputMethodManager.hideSoftInputFromWindow(floatView.getApplicationWindowToken(), 0);
 
-                // A Toast is shown when the text is saved
-                Toast.makeText(FloatingWindow.this, "Text Saved!!!", Toast.LENGTH_SHORT).show();
+                apiInterface = ApiClient.getApiClient('s').create(ApiInterface.class);
+                TextView titleText = floatView.findViewById(R.id.titleText);
+                titleText.setText(R.string.analysis_loading);
+                Log.e("Potential Analysis", "Starting /potentialMessage/");
+                Call<String> call = apiInterface.potentialMessage(Common.bitmapName,Common.savedInput);
+                call.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
+                        String res = response.body();
+                        Log.e("Potential Analysis","Submitted Correctly "+response.isSuccessful());
+                        if(res!=""){
+                            Common.inquisitiveness = Integer.parseInt(res.substring(0, 1));
+                            Common.interestingness = Integer.parseInt(res.substring(1, 2));
+                            Common.ghostedness = Integer.parseInt(res.substring(2, 3));
+                            Log.e("Potential Analysis", Integer.toString(Common.inquisitiveness)+" "+Integer.toString(Common.interestingness)+" "+Integer.toString(Common.ghostedness));
+                            updateStats();
+                        } else {
+                            Log.e("Potential Analysis", "No conversation found to analyse");
+                            Common.inquisitiveness = -1;
+                            Common.interestingness = -1;
+                            Common.ghostedness = -1;
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+                        Log.e("Communication",t.getMessage());
+                    }
+                });
             }
         });
+    }
+
+    private void updateStats(){
+        TextView titleText = floatView.findViewById(R.id.titleText);
+        // If there's any value, we know the analysis has loaded otherwise it's still loading
+        if(Common.inquisitiveness>=1){
+            titleText.setText(R.string.loaded_analysis);
+        } else {
+            titleText.setText(R.string.analysis_loading);
+        }
+        // Set inquisitive images
+        ImageView imageView = floatView.findViewById(R.id.inquisitiveMin);
+        imageView.setImageResource(R.drawable.ic_mouthshut);
+        imageView = floatView.findViewById(R.id.inquisitiveEmojiOne);
+        if(Common.inquisitiveness==1){
+            imageView.setImageResource(R.drawable.ic_fire);
+        } else {
+            imageView.setImageResource(R.drawable.ic_redcircle);
+        }
+        imageView = floatView.findViewById(R.id.inquisitiveEmojiTwo);
+        if(Common.inquisitiveness==2){
+            imageView.setImageResource(R.drawable.ic_fire);
+        } else {
+            imageView.setImageResource(R.drawable.ic_yellowcircle);
+        }
+        imageView = floatView.findViewById(R.id.inquisitiveEmojiThree);
+        if(Common.inquisitiveness==3){
+            imageView.setImageResource(R.drawable.ic_fire);
+        } else {
+            imageView.setImageResource(R.drawable.ic_yellowcircle);
+        }
+        imageView = floatView.findViewById(R.id.inquisitiveEmojiFour);
+        if(Common.inquisitiveness==4){
+            imageView.setImageResource(R.drawable.ic_fire);
+        } else {
+            imageView.setImageResource(R.drawable.ic_greencircle);
+        }
+        imageView = floatView.findViewById(R.id.inquisitiveMax);
+        imageView.setImageResource(R.drawable.ic_think);
+
+        imageView = floatView.findViewById(R.id.interestingMin);
+        imageView.setImageResource(R.drawable.ic_sleep);
+        imageView = floatView.findViewById(R.id.interestingEmojiOne);
+        if(Common.interestingness==1){
+            imageView.setImageResource(R.drawable.ic_fire);
+        } else {
+            imageView.setImageResource(R.drawable.ic_redcircle);
+        }
+        imageView = floatView.findViewById(R.id.interestingEmojiTwo);
+        if(Common.interestingness==2){
+            imageView.setImageResource(R.drawable.ic_fire);
+        } else {
+            imageView.setImageResource(R.drawable.ic_yellowcircle);
+        }
+        imageView = floatView.findViewById(R.id.interestingEmojiThree);
+        if(Common.interestingness==3){
+            imageView.setImageResource(R.drawable.ic_fire);
+        } else {
+            imageView.setImageResource(R.drawable.ic_yellowcircle);
+        }
+        imageView = floatView.findViewById(R.id.interestingEmojiFour);
+        if(Common.interestingness==4){
+            imageView.setImageResource(R.drawable.ic_fire);
+        } else {
+            imageView.setImageResource(R.drawable.ic_greencircle);
+        }
+        imageView = floatView.findViewById(R.id.interestingMax);
+        imageView.setImageResource(R.drawable.ic_stareyes);
+        imageView = floatView.findViewById(R.id.ghostedEmojiMin);
+        imageView.setImageResource(R.drawable.ic_ghosted);
+        imageView = floatView.findViewById(R.id.ghostedEmojiOne);
+        if(Common.ghostedness==1){
+            imageView.setImageResource(R.drawable.ic_fire);
+        } else {
+            imageView.setImageResource(R.drawable.ic_redcircle);
+        }
+        imageView = floatView.findViewById(R.id.ghostedEmojiTwo);
+        if(Common.ghostedness==2){
+            imageView.setImageResource(R.drawable.ic_fire);
+        } else {
+            imageView.setImageResource(R.drawable.ic_yellowcircle);
+        }
+        imageView = floatView.findViewById(R.id.ghostedEmojiThree);
+        if(Common.ghostedness==3){
+            imageView.setImageResource(R.drawable.ic_fire);
+        } else {
+            imageView.setImageResource(R.drawable.ic_yellowcircle);
+        }
+        imageView = floatView.findViewById(R.id.ghostedEmojiFour);
+        if(Common.ghostedness==4){
+            imageView.setImageResource(R.drawable.ic_fire);
+        } else {
+            imageView.setImageResource(R.drawable.ic_greencircle);
+        }
+        imageView = floatView.findViewById(R.id.ghostedEmojiMax);
+        imageView.setImageResource(R.drawable.ic_coolglasses);
     }
 
     // It is called when stopService()

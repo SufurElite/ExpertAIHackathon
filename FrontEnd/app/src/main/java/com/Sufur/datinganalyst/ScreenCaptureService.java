@@ -187,7 +187,18 @@ public class ScreenCaptureService extends Service {
                         public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
                             String res = response.body();
                             Log.e(TAG,"Submitted Correctly "+response.isSuccessful());
-                            Common.textFromConvo = res;
+                            if(res!=""){
+                                Common.bitmapName = title;
+                                Common.inquisitiveness = Integer.parseInt(res.substring(0, 1));
+                                Common.interestingness = Integer.parseInt(res.substring(1, 2));
+                                Common.ghostedness = Integer.parseInt(res.substring(2, 3));
+                                Log.e(TAG, Integer.toString(Common.inquisitiveness)+" "+Integer.toString(Common.interestingness)+" "+Integer.toString(Common.ghostedness));
+                            } else {
+                                Log.e(TAG, "No conversation found to analyse");
+                                Common.inquisitiveness = -1;
+                                Common.interestingness = -1;
+                                Common.ghostedness = -1;
+                            }
                         }
 
                         @Override

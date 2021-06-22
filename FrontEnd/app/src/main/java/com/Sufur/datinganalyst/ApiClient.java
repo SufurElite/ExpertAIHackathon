@@ -5,7 +5,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class ApiClient {
     // Will point to the server, whether hosted on G-Cloud, Heroku, or just on the Desktop
-    private static final String BASE_URL = "https://chadvice.ew.r.appspot.com/";
+    private static final String BASE_URL = "";
     private static Retrofit retrofit;
     public static Retrofit getApiClient(char c)
     {

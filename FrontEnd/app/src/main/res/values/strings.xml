@@ -7,6 +7,7 @@
     <string name="launch_btn">Launch AI</string>
     <string name="analysis_loading">Analysis is Loading . . .</string>
     <string name="loaded_analysis">Loaded Analysis</string>
+    <string name="potential_analysis">Analysis After Potential Message</string>
 
     <string name="inquisitiveFeat">Inquisitiveness</string>
     <string name="interestFeat">Interestingness</string>

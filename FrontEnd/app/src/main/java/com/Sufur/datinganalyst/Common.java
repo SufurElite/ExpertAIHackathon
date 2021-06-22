@@ -11,7 +11,10 @@ public class Common {
     public static String currentInput = "";
     // string stored here when save is pressed
     public static String savedInput = "";
-    public static String textFromConvo = "";
+    public static int inquisitiveness;
+    public static int interestingness;
+    public static int ghostedness;
+    public static String bitmapName = "";
     public static FirebaseUser currentUser;
     public static FirebaseStorage db;
     public static Bitmap bitmap;

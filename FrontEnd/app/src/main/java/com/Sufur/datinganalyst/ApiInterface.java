@@ -18,7 +18,6 @@ public interface ApiInterface {
     @GET("/getImageText/{path}")
     Call<String> postImage(@Path("path")String path);
 
-    @Multipart
-    @POST("/image/")
-    Call<String> postImage(@Part MultipartBody.Part image);
+    @GET("/potentialMessage/{path}/{msg}")
+    Call<String> potentialMessage(@Path("path")String path, @Path("msg")String msg);
 }
