@@ -2,7 +2,7 @@ Werkzeug==1.0.1
 Flask==1.1.2
 protobuf==3.17.3
 Keras==2.4.3
-tensorflow==2.5.0
+tensorflow==2.11.1
 scikit-learn==0.24.2
 google-cloud
 google-cloud-vision
